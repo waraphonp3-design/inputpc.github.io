@@ -1,0 +1,2361 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Dashboard: แผนวิเคราะห์ยอดผลิตและซ่อมบำรุงใหญ่ (2021-2026)</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* =========================================================================
+           EXECUTIVE DESIGN SYSTEM: BALANCE, HARMONY & REFINEMENT
+           ========================================================================= */
+        :root {
+            --bg-primary: #0a0f1d;
+            --bg-secondary: #111a36;
+            --bg-card: #152248;
+            --bg-card-hover: #1c2d5e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-purple: #a855f7;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-subtle: rgba(255, 255, 255, 0.05);
+            --font-family: 'Prompt', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-family);
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            line-height: 1.5;
+            padding: 18px 24px 36px;
+        }
+
+        .container {
+            max-width: 1480px;
+            margin: 0 auto;
+        }
+
+        /* Top Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: linear-gradient(135deg, #0e1a3a 0%, #152756 100%);
+            padding: 14px 22px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+            margin-bottom: 14px;
+        }
+
+        .header-title-box h1 {
+            font-size: 19px;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.3px;
+        }
+
+        .header-title-box p {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .badge-blue { background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.25); }
+        .badge-green { background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25); }
+        .badge-purple { background: rgba(168, 85, 247, 0.12); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.25); }
+        .badge-red { background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25); }
+
+        .btn {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+        }
+        .btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            border: 1px solid var(--border-color);
+            box-shadow: none;
+        }
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-blue);
+        }
+
+        /* KPI Cards Grid - Single Row 5 Columns */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 14px;
+            width: 100%;
+        }
+        @media (max-width: 1200px) {
+            .kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+        @media (max-width: 768px) {
+            .kpi-grid { grid-template-columns: 1fr; }
+        }
+
+        .kpi-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 11px 13px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px -3px rgba(0,0,0,0.4);
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3.5px;
+            height: 100%;
+        }
+        .kpi-card.blue::before { background: var(--accent-blue); }
+        .kpi-card.green::before { background: var(--accent-green); }
+        .kpi-card.amber::before { background: var(--accent-amber); }
+        .kpi-card.purple::before { background: var(--accent-purple); }
+        .kpi-card.red::before { background: var(--accent-red); }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .kpi-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .kpi-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .kpi-val {
+            font-size: 18.5px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 2px;
+            letter-spacing: -0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .kpi-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Segmented Tabs Navigation Bar (Modern Apple/Linear Style) */
+        .tabs-nav {
+            display: flex;
+            gap: 4px;
+            background: rgba(17, 26, 54, 0.85);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 16px;
+            overflow-x: auto;
+            backdrop-filter: blur(8px);
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 12.5px;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            flex: 1;
+            justify-content: center;
+        }
+        .tab-btn:hover {
+            color: #ffffff;
+            background: rgba(255,255,255,0.04);
+        }
+        .tab-btn.active {
+            color: #ffffff;
+            background: #2563eb;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
+        }
+
+        .tab-pane {
+            display: none;
+        }
+        .tab-pane.active {
+            display: block;
+            animation: fadeIn 0.25s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Chart Card */
+        .chart-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 18px;
+            margin-bottom: 16px;
+        }
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .filter-pill:hover {
+            color: #fff;
+            border-color: #38bdf8;
+        }
+        .filter-pill.active {
+            background: #2563eb;
+            color: #fff;
+            border-color: #3b82f6;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Tables */
+        .custom-table-wrapper {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .table-header-bar {
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        table.exec-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12.5px;
+            text-align: left;
+        }
+        table.exec-table th {
+            background: #0f1833;
+            color: #94a3b8;
+            font-weight: 600;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+        table.exec-table td {
+            padding: 9px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            color: #e2e8f0;
+            white-space: nowrap;
+        }
+        table.exec-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .num-cell {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            font-family: 'Inter', monospace;
+        }
+
+        .heat-cell-green { background: rgba(16, 185, 129, 0.20); color: #34d399; font-weight: 600; text-align: right; }
+        .heat-cell-red { background: rgba(239, 68, 68, 0.20); color: #f87171; font-weight: 600; text-align: right; }
+        .heat-cell-normal { text-align: right; color: #cbd5e1; }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 24px 0 12px;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 40px;
+        }
+    
+        /* Machine Mini Cards Grid - Anti-Overflow & Perfect Responsiveness */
+        .machine-grid-8 {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        @media (max-width: 1400px) {
+            .machine-grid-8 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 14px;
+            }
+        }
+        @media (max-width: 640px) {
+            .machine-grid-8 {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        .mach-card-box {
+            background: #111a36;
+            border: 1px solid #1e293b;
+            border-radius: 10px;
+            padding: 12px 14px;
+            min-width: 0;
+            overflow: hidden;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .mach-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            min-height: 26px;
+            gap: 6px;
+        }
+
+        .mach-card-title {
+            font-weight: 700;
+            font-size: 13.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mach-card-badge {
+            font-size: 11px;
+            padding: 2px 7px;
+            border-radius: 4px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            font-weight: 600;
+        }
+
+        .mach-canvas-wrapper {
+            position: relative;
+            width: 100%;
+            min-width: 0;
+            height: 160px;
+            overflow: hidden;
+        }
+
+        .mach-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            margin-top: 8px;
+            padding-top: 6px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            white-space: nowrap;
+            gap: 6px;
+        }
+
+    
+        /* Multi-Column Grid Layouts (2 Columns & 3 Columns) */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        @media (max-width: 992px) {
+            .grid-2 {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        @media (max-width: 1100px) {
+            .grid-3 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 700px) {
+            .grid-3 {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+    
+        /* Universal Chart Container - Balanced & Proportional */
+        .chart-container {
+            position: relative;
+            height: 420px;
+            width: 100%;
+            min-height: 380px;
+            max-height: 460px;
+            overflow: hidden;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+
+        .chart-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 10px;
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chart-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-title-box">
+            <h1>
+                <i data-lucide="line-chart" style="color: #38bdf8; width: 32px; height: 32px;"></i>
+                แดชบอร์ดผู้บริหาร: วิเคราะห์ยอดผลิต Input และแผนซ่อมบำรุงใหญ่ (2021-2026)
+            </h1>
+            <p>Executive Dashboard: Machine Production Seasonality & Annual Major Turnaround Planning (6-Year Time Horizon)</p>
+        </div>
+        <div class="header-meta">
+            <span class="badge badge-blue"><i data-lucide="calendar" style="width: 14px;"></i> 2021 - 2026 (6 ปีเต็ม)</span>
+            <span class="badge badge-green"><i data-lucide="layers" style="width: 14px;"></i> 8 เครื่องจักร (M1-M9)</span>
+            <span class="badge badge-purple"><i data-lucide="wrench" style="width: 14px;"></i> แผนซ่อมบำรุงใหญ่</span>
+            <button class="btn btn-outline" onclick="window.print()"><i data-lucide="printer" style="width: 16px;"></i> พิมพ์ / PDF</button>
+            <button class="btn" onclick="exportToCSV()"><i data-lucide="download" style="width: 16px;"></i> ส่งออก CSV</button>
+        </div>
+    </header>
+
+    <!-- Top KPI Cards -->
+    <div class="kpi-grid">
+        <div class="kpi-card blue">
+            <div class="kpi-header">
+                <span class="kpi-title">ยอดผลิตรวมสะสม 6 ปี (2021-2026)</span>
+                <div class="kpi-icon" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">
+                    <i data-lucide="database" style="width: 20px;"></i>
+                </div>
+            </div>
+            <div class="kpi-val">354.55M</div>
+            <div class="kpi-sub">
+                <span style="color: #38bdf8; font-weight: 600;">69 เดือน</span> เฉลี่ย 5.14M หน่วย/เดือน
+            </div>
+        </div>
+
+        <div class="kpi-card green">
+            <div class="kpi-header">
+                <span class="kpi-title">หน้าต่างซ่อมใหญ่ที่ดีที่สุด (Window A+)</span>
+                <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                    <i data-lucide="calendar-check" style="width: 20px;"></i>
+                </div>
+            </div>
+            <div class="kpi-val" style="color: #34d399;">ธันวาคม (Dec)</div>
+            <div class="kpi-sub">
+                <span style="color: #34d399; font-weight: 600;">ต่ำสุดต่อเนื่อง 6 ปี</span> ดรอป -27% จากเฉลี่ย
+            </div>
+        </div>
+
+        <div class="kpi-card amber">
+            <div class="kpi-header">
+                <span class="kpi-title">หน้าต่างสำรอง / สลับซ่อม (Window A-)</span>
+                <div class="kpi-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+                    <i data-lucide="clock" style="width: 20px;"></i>
+                </div>
+            </div>
+            <div class="kpi-val" style="color: #fbbf24;">ก.พ. & เม.ย.</div>
+            <div class="kpi-sub">
+                <span style="color: #fbbf24; font-weight: 600;">ก.พ. เดือนสั้น</span> & เม.ย. วันหยุดยาวสงกรานต์
+            </div>
+        </div>
+
+        <div class="kpi-card red">
+            <div class="kpi-header">
+                <span class="kpi-title">ช่วงห้ามหยุดซ่อมเด็ดขาด (Blackout Peak)</span>
+                <div class="kpi-icon" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">
+                    <i data-lucide="alert-triangle" style="width: 20px;"></i>
+                </div>
+            </div>
+            <div class="kpi-val" style="color: #f87171;">พฤษภาคม (May)</div>
+            <div class="kpi-sub">
+                <span style="color: #f87171; font-weight: 600;">5.87M - 6.70M</span> เดือนที่ยอดผลิตสูงสุดทุกปี
+            </div>
+        </div>
+
+        <div class="kpi-card purple">
+            <div class="kpi-header">
+                <span class="kpi-title">2 เครื่องจักรหลัก (Core 42.4%)</span>
+                <div class="kpi-icon" style="background: rgba(168, 85, 247, 0.15); color: #a855f7;">
+                    <i data-lucide="shield-alert" style="width: 20px;"></i>
+                </div>
+            </div>
+            <div class="kpi-val" style="color: #c084fc;">M1 & M3</div>
+            <div class="kpi-sub">
+                <span style="color: #ef4444; font-weight: 600;">ห้ามหยุดพร้อมกัน</span> โยกงานให้ M9 ทดแทน
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs (Sleek & All Visible) -->
+    <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab('tab-machine-matrix')">
+            <i data-lucide="wrench" style="width: 16px;"></i> 1. แผนซ่อมบำรุง & เฉลี่ยเครื่องจักร
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab-yoy')">
+            <i data-lucide="bar-chart-2" style="width: 16px;"></i> 2. กราฟย้อนหลังรายปี (YoY)
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab-single-year')">
+            <i data-lucide="calendar" style="width: 16px;"></i> 3. เจาะลึกรายปี (2021-2026)
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab-machine-hist')">
+            <i data-lucide="cpu" style="width: 16px;"></i> 4. ติดตามรายเครื่องจักร
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab-strategy')">
+            <i data-lucide="clipboard-check" style="width: 16px;"></i> 5. กลยุทธ์ซ่อมบำรุงใหญ่
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab-data')">
+            <i data-lucide="table" style="width: 16px;"></i> 6. ตารางข้อมูลจริง (Master Data)
+        </button>
+    </div>
+
+    <!-- TAB 1: MACHINE MAINTENANCE MATRIX & COMPARATIVE CHARTS -->
+    <div id="tab-machine-matrix" class="tab-pane active">
+
+
+        <!-- Comparative Multi-Line Chart -->
+        
+        <!-- MASTER SECTION: 5-YEAR MONTHLY AVERAGE BY MACHINE & MONTH -->
+        <div class="chart-card" style="margin-bottom: 24px; border: 1px solid #3b82f6;">
+            <div class="chart-header" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <div>
+                    <h3 class="chart-title" style="font-size: 16px; color: #38bdf8; display: flex; align-items: center; gap: 8px; margin: 0;">
+                        <i data-lucide="bar-chart-3" style="color: #38bdf8; width: 20px; height: 20px;"></i>
+                        กราฟยอดผลิตเฉลี่ย 5 ปี แยกรายเครื่องจักร & รายเดือน
+                    </h3>
+                    <p class="chart-desc" style="font-size: 12px; color: #94a3b8; margin-top: 2px;">
+                        สถิติจริง 5 ปี (2021-2025) วิเคราะห์ช่วงเวลาหยุดซ่อมบำรุงใหญ่ (Turnaround Planning)
+                    </p>
+                </div>
+                <!-- Display Mode Switcher (Sleek & Single-Line) -->
+                <div class="filter-group" style="gap: 6px; display: flex; align-items: center; flex-wrap: nowrap;">
+                    <span style="font-size: 12px; color: #94a3b8; font-weight: 600;">มุมมอง:</span>
+                    <button id="btnViewGrid" class="filter-pill active" onclick="switchMainAvgView('grid', this)" style="padding: 5px 12px; font-size: 12px;">
+                        <i data-lucide="layout-grid" style="width: 14px; vertical-align: middle;"></i> แยก 8 เครื่องจักร
+                    </button>
+                    <!-- Column Count Toggle (4 cols vs 2 cols) -->
+                    <button id="btnColToggle" class="filter-pill" onclick="toggleGridColumns(this)" style="padding: 5px 10px; font-size: 12px; background: rgba(255,255,255,0.05);" title="สลับขนาดช่องแสดงผล">
+                        <i data-lucide="columns" style="width: 14px; vertical-align: middle;"></i> <span id="colToggleText">2 แถวคู่</span>
+                    </button>
+                    <button id="btnViewGrouped" class="filter-pill" onclick="switchMainAvgView('grouped', this)" style="padding: 5px 12px; font-size: 12px;">
+                        <i data-lucide="bar-chart-2" style="width: 14px; vertical-align: middle;"></i> เปรียบเทียบรายเดือน
+                    </button>
+                    <button id="btnViewLine" class="filter-pill" onclick="switchMainAvgView('line', this)" style="padding: 5px 12px; font-size: 12px;">
+                        <i data-lucide="trending-up" style="width: 14px; vertical-align: middle;"></i> กราฟเส้นแนวโน้ม
+                    </button>
+                </div>
+            </div>
+
+            <!-- VIEW 1: 8 SMALL MULTIPLES CARDS (SEPARATE CHART FOR EACH MACHINE) -->
+            <div id="viewModeGrid" style="display: block; margin-top: 18px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: rgba(56, 189, 248, 0.06); padding: 8px 14px; border-radius: 8px; border-left: 3px solid #38bdf8; font-size: 12px;">
+                    <span style="color: #e2e8f0;">
+                        📌 <b>คู่มือสี:</b> 
+                        <span style="color: #34d399; font-weight: 600; margin-left: 6px;">🟢 แท่งเขียว = เดือนต่ำสุด (ควรซ่อม)</span> | 
+                        <span style="color: #f87171; font-weight: 600; margin-left: 4px;">🔴 แท่งแดง = เดือนพีค (ห้ามหยุด)</span> | 
+                        <span style="color: #38bdf8; margin-left: 4px;">🔵 แท่งฟ้า = เดือนปกติ</span>
+                    </span>
+                    <span style="color: #94a3b8; font-size: 11.5px;">--- เส้นประขาว = ยอดเฉลี่ยต่อเดือนตลอดทั้งปี</span>
+                </div>
+
+                                <!-- 8 Machine Cards Grid (Anti-Overflow & Responsive) -->
+                <div class="machine-grid-8" id="machineCardsGrid">
+                    <!-- Card M1 -->
+                    <div class="mach-card-box" style="border-top: 3px solid #38bdf8;">
+                        <div class="mach-card-header">
+                            <span class="mach-card-title" style="color: #38bdf8;">เครื่องจักร M1 (เสาหลัก)</span>
+                            <span class="mach-card-badge" style="background: rgba(56,189,248,0.15); color: #38bdf8;">สัดส่วน 21.4%</span>
+                        </div>
+                        <div class="mach-canvas-wrapper"><canvas id="canvasMiniM1"></canvas></div>
+                        <div class="mach-card-footer">
+                            <span style="color: #34d399; font-weight: 600;">🟢 ต่ำสุด: ส.ค. (889k)</span>
+                            <span style="color: #f87171; font-weight: 600;">🔴 พีคสุด: พ.ย. (1.37M)</span>
+                        </div>
+                    </div>
+
+                    <!-- Card M3 -->
+                    <div class="mach-card-box" style="border-top: 3px solid #f97316;">
+                        <div class="mach-card-header">
+                            <span class="mach-card-title" style="color: #f97316;">เครื่องจักร M3 (เสาหลัก)</span>
+                            <span class="mach-card-badge" style="background: rgba(249,115,22,0.15); color: #f97316;">สัดส่วน 21.0%</span>
+                        </div>
+                        <div class="mach-canvas-wrapper"><canvas id="canvasMiniM3"></canvas></div>
+                        <div class="mach-card-footer">
+                            <span style="color: #34d399; font-weight: 600;">🟢 ต่ำสุด: ก.พ. (849k)</span>
+                            <span style="color: #f87171; font-weight: 600;">🔴 พีคสุด: พ.ค. (1.36M)</span>
+                        </div>
+                    </div>
+
+                    <!-- Card M4 -->
+                    <div class="mach-card-box" style="border-top: 3px solid #10b981;">
+                        <div class="mach-card-header">
+                            <span class="mach-card-title" style="color: #10b981;">เครื่องจักร M4</span>
+                            <span class="mach-card-badge" style="background: rgba(16,185,129,0.15); color: #10b981;">สัดส่วน 15.6%</span>
+                        </div>
+                        <div class="mach-canvas-wrapper"><canvas id="canvasMiniM4"></canvas></div>
+                        <div class="mach-card-footer">
+                            <span style="color: #34d399; font-weight: 600;">🟢 ต่ำสุด: ธ.ค. (515k)</span>
+                            <span style="color: #f87171; font-weight: 600;">🔴 พีคสุด: มี.ค. (1.16M)</span>
+                        </div>
+                    </div>
+
+                    <!-- Card M5 -->
+                    <div class="mach-card-box" style="border-top: 3px solid #eab308;">
+                        <div class="mach-card-header">
+                            <span class="mach-card-title" style="color: #eab308;">เครื่องจักร M5</span>
+                            <span class="mach-card-badge" style="background: rgba(234,179,8,0.15); color: #eab308;">เสี่ยง Breakdown 9.6%</span>
+                        </div>
+                        <div class="mach-canvas-wrapper"><canvas id="canvasMiniM5"></canvas></div>
+                        <div class="mach-card-footer">
+                            <span style="color: #34d399; font-weight: 600;">🟢 ต่ำสุด: ธ.ค. (240k)</span>
+                            <span style="color: #f87171; font-weight: 600;">🔴 พีคสุด: ส.ค. (704k)</span>
+                        </div>
+                    </div>
+
+                    <!-- Card M6 -->
+                    <div class="mach-card-box" style="border-top: 3px solid #a855f7;">
+                        <div class="mach-card-header">
+                            <span class="mach-card-title" style="color: #a855f7;">เครื่องจักร M6</span>
+                            <span class="mach-card-badge" style="background: rgba(168,85,247,0.15); color: #a855f7;">สัดส่วน 16.2%</span>
+                        </div>
+                        <div class="mach-canvas-wrapper"><canvas id="canvasMiniM6"></canvas></div>
+                        <div class="mach-card-footer">
+                            <span style="color: #34d399; font-weight: 600;">🟢 ต่ำสุด: ธ.ค. (613k)</span>
+                            <span style="color: #f87171; font-weight: 600;">🔴 พีคสุด: พ.ค. (983k)</span>
+                        </div>
+                    </div>
+
+                    <!-- Card M7 -->
+                    <div class="mach-card-box" style="border-top: 3px solid #ec4899;">
+                        <div class="mach-card-header">
+                            <span class="mach-card-title" style="color: #ec4899;">เครื่องจักร M7</span>
+                            <span class="mach-card-badge" style="background: rgba(236,72,153,0.15); color: #ec4899;">สัดส่วน 7.1%</span>
+                        </div>
+                        <div class="mach-canvas-wrapper"><canvas id="canvasMiniM7"></canvas></div>
+                        <div class="mach-card-footer">
+                            <span style="color: #34d399; font-weight: 600;">🟢 ต่ำสุด: พ.ย. (274k)</span>
+                            <span style="color: #f87171; font-weight: 600;">🔴 พีคสุด: เม.ย. (445k)</span>
+                        </div>
+                    </div>
+
+                    <!-- Card M8 -->
+                    <div class="mach-card-box" style="border-top: 3px solid #6366f1;">
+                        <div class="mach-card-header">
+                            <span class="mach-card-title" style="color: #6366f1;">เครื่องจักร M8</span>
+                            <span class="mach-card-badge" style="background: rgba(99,102,241,0.15); color: #6366f1;">สัดส่วน 8.8%</span>
+                        </div>
+                        <div class="mach-canvas-wrapper"><canvas id="canvasMiniM8"></canvas></div>
+                        <div class="mach-card-footer">
+                            <span style="color: #34d399; font-weight: 600;">🟢 ต่ำสุด: มี.ค. (331k)</span>
+                            <span style="color: #f87171; font-weight: 600;">🔴 พีคสุด: ส.ค. (642k)</span>
+                        </div>
+                    </div>
+
+                    <!-- Card M9 -->
+                    <div class="mach-card-box" style="border-top: 3px solid #14b8a6;">
+                        <div class="mach-card-header">
+                            <span class="mach-card-title" style="color: #14b8a6;">เครื่องจักร M9</span>
+                            <span class="mach-card-badge" style="background: rgba(20,184,166,0.15); color: #14b8a6;">เครื่องใหม่ปี 2026</span>
+                        </div>
+                        <div class="mach-canvas-wrapper"><canvas id="canvasMiniM9"></canvas></div>
+                        <div class="mach-card-footer">
+                            <span style="color: #34d399; font-weight: 600;">🟢 เริ่มเดิน: มี.ค.</span>
+                            <span style="color: #f87171; font-weight: 600;">🔴 พีคล่าสุด: ก.ย. (585k)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 2: GROUPED BAR CHART BY MONTH -->
+            <div id="viewModeGrouped" style="display: none; margin-top: 18px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: rgba(56, 189, 248, 0.08); padding: 10px 16px; border-radius: 8px; border-left: 4px solid #38bdf8;">
+                    <span style="font-size: 13px; color: #e2e8f0;">
+                        📊 <b>กราฟแท่งเปรียบเทียบในแต่ละเดือน:</b> แกน X คือเดือน ม.ค. ถึง ธ.ค. แต่ละเดือนแยกแท่งของแต่ละเครื่องจักร (M1 - M8) ด้วยสีคมชัด
+                    </span>
+                    <button class="filter-pill" onclick="toggleStackGrouped(this)" style="font-size: 11px; padding: 4px 10px;">สลับเป็นแบบ Stacked (ซ้อนสะสม)</button>
+                </div>
+                <div class="chart-container" style="height: 420px;">
+                    <canvas id="groupedMachineChart"></canvas>
+                </div>
+            </div>
+
+            <!-- VIEW 3: MULTI-LINE SEASONALITY CURVES -->
+            <div id="viewModeLine" style="display: none; margin-top: 18px;">
+                <div class="chart-container" style="height: 420px;">
+                    <canvas id="allMachinesCurveChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Matrix Table: Machine x 12 Months with Status Badges -->
+        <div class="custom-table-wrapper" style="margin-bottom: 24px;">
+            <div class="table-header-bar">
+                <div>
+                    <h3 style="font-size: 16px; font-weight: 700; color: #fff;">
+                        ตารางเปรียบเทียบระดับการผลิตและช่วงเวลาซ่อมบำรุงที่เหมาะสม (Maintenance Readiness Grid)
+                    </h3>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">
+                        <span style="color:#38bdf8;">เลือกดูข้อมูลได้ตามต้องการ:</span> สลับดูระหว่าง <b>"ค่าเฉลี่ยสถิติ 5 ปี (2021-2025)"</b> หรือ <b>"ยอดผลิตจริงของแต่ละปี (2021 - 2026)"</b> ได้ทันที
+                    </p>
+                </div>
+                <!-- Interactive Toggle Buttons for Year/Average -->
+                <div class="filter-group">
+                    <span style="font-size: 12px; color: #94a3b8; font-weight: 600;">เลือกชุดข้อมูล:</span>
+                    <button class="filter-pill active" onclick="switchGridMode('AVG', this)">เฉลี่ย 5 ปี (2021-2025)</button>
+                    <button class="filter-pill" onclick="switchGridMode('2026', this)">ปี 2026 จริง</button>
+                    <button class="filter-pill" onclick="switchGridMode('2025', this)">ปี 2025 จริง</button>
+                    <button class="filter-pill" onclick="switchGridMode('2024', this)">ปี 2024 จริง</button>
+                    <button class="filter-pill" onclick="switchGridMode('2023', this)">ปี 2023 จริง</button>
+                    <button class="filter-pill" onclick="switchGridMode('2022', this)">ปี 2022 จริง</button>
+                    <button class="filter-pill" onclick="switchGridMode('2021', this)">ปี 2021 จริง</button>
+                </div>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="exec-table">
+                    <thead>
+                        <tr>
+                            <th style="position: sticky; left: 0; z-index: 2; background: #111a36;">เครื่องจักร</th>
+                            <th class="num-cell">เฉลี่ย/ด.</th>
+                            <th class="num-cell">ม.ค.</th>
+                            <th class="num-cell">ก.พ.</th>
+                            <th class="num-cell">มี.ค.</th>
+                            <th class="num-cell">เม.ย.</th>
+                            <th class="num-cell">พ.ค.</th>
+                            <th class="num-cell">มิ.ย.</th>
+                            <th class="num-cell">ก.ค.</th>
+                            <th class="num-cell">ส.ค.</th>
+                            <th class="num-cell">ก.ย.</th>
+                            <th class="num-cell">ต.ค.</th>
+                            <th class="num-cell">พ.ย.</th>
+                            <th class="num-cell">ธ.ค.</th>
+                            <th>ช่วงเวลาที่ควรซ่อมบำรุง (ยอดน้อย)</th>
+                            <th>ช่วงห้ามหยุด (ยอดพีค)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="machineScheduleTableBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 8 Actionable Machine Strategy Cards -->
+        <h3 style="font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+            <i data-lucide="check-square" style="color: #34d399;"></i>
+            สรุปข้อแนะนำแผนซ่อมบำรุงใหญ่แยกตามเครื่องจักร (Machine-by-Machine Action Plan)
+        </h3>
+        <div class="grid-2">
+            <!-- M1 -->
+            <div class="chart-card" style="border-left: 4px solid #00d2ff;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <b style="color: #38bdf8; font-size: 16px;">เครื่อง M1 (Core Pillar #1 - 21.4% Share)</b>
+                    <span class="badge badge-purple">เสาหลักโรงงาน</span>
+                </div>
+                <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+                    <p>• <b>เดือนที่ยอดผลิตน้อย (ควรซ่อม):</b> <span style="color:#34d399; font-weight:600;">ส.ค. (889k), ก.พ. (897k), ธ.ค. (900k)</span></p>
+                    <p>• <b>เดือนที่ยอดผลิตมาก (ห้ามหยุด):</b> <span style="color:#f87171; font-weight:600;">พ.ย. (1.37M), มี.ค. (1.23M), ก.ย. (1.20M)</span></p>
+                    <p style="margin-top: 6px; padding: 8px; background: rgba(56, 189, 248, 0.08); border-radius: 6px;">
+                        🛠️ <b>ช่วงเวลาที่ควรซ่อมบำรุงใหญ่:</b> <b>ปลายธันวาคม (สัปดาห์หยุดปีใหม่) หรือ กุมภาพันธ์</b><br>
+                        ⚠️ <b>กฎเหล็ก:</b> ห้ามปิดซ่อมพร้อม M3 เด็ดขาด ให้ใช้ M9 รองรับกำลังการผลิตแทน
+                    </p>
+                </div>
+            </div>
+
+            <!-- M3 -->
+            <div class="chart-card" style="border-left: 4px solid #ff6b35;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <b style="color: #818cf8; font-size: 16px;">เครื่อง M3 (Core Pillar #2 - 21.0% Share)</b>
+                    <span class="badge badge-purple">เสาหลักโรงงาน</span>
+                </div>
+                <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+                    <p>• <b>เดือนที่ยอดผลิตน้อย (ควรซ่อม):</b> <span style="color:#34d399; font-weight:600;">ก.พ. (849k - ต่ำสุดชัดเจน), ธ.ค. (898k), ก.ค. (914k)</span></p>
+                    <p>• <b>เดือนที่ยอดผลิตมาก (ห้ามหยุด):</b> <span style="color:#f87171; font-weight:600;">พ.ค. (1.37M), ม.ค. (1.26M), เม.ย. (1.17M)</span></p>
+                    <p style="margin-top: 6px; padding: 8px; background: rgba(129, 140, 248, 0.08); border-radius: 6px;">
+                        🛠️ <b>ช่วงเวลาที่ควรซ่อมบำรุงใหญ่:</b> <b>กุมภาพันธ์ (Window A-)</b><br>
+                        💡 M3 มีสถิติต่ำสุดในเดือน ก.พ. สม่ำเสมอทุกปี จึงเหมาะอย่างยิ่งสำหรับการจัดคิว Overhaul 7-10 วัน
+                    </p>
+                </div>
+            </div>
+
+            <!-- M6 -->
+            <div class="chart-card" style="border-left: 4px solid #8b5cf6;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <b style="color: #f472b6; font-size: 16px;">เครื่อง M6 (High Volume - 16.2% Share)</b>
+                    <span class="badge badge-blue">กำลังผลิตสูงอันดับ 3</span>
+                </div>
+                <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+                    <p>• <b>เดือนที่ยอดผลิตน้อย (ควรซ่อม):</b> <span style="color:#34d399; font-weight:600;">ธ.ค. (613k), เม.ย. (639k)</span></p>
+                    <p>• <b>เดือนที่ยอดผลิตมาก (ห้ามหยุด):</b> <span style="color:#f87171; font-weight:600;">พ.ค. (984k), ก.ย. (885k), มิ.ย. (884k)</span></p>
+                    <p style="margin-top: 6px; padding: 8px; background: rgba(244, 114, 182, 0.08); border-radius: 6px;">
+                        🛠️ <b>ช่วงเวลาที่ควรซ่อมบำรุงใหญ่:</b> <b>เมษายน (สัปดาห์สงกรานต์) หรือ ธันวาคม</b><br>
+                        💡 ยอดผลิตลดลงในช่วงสงกรานต์ เหมาะทำ PM เชิงลึก 5-7 วัน โดยไม่กระทบยอดส่งมอบ
+                    </p>
+                </div>
+            </div>
+
+            <!-- M4 -->
+            <div class="chart-card" style="border-left: 4px solid #10b981;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <b style="color: #34d399; font-size: 16px;">เครื่อง M4 (High Volume - 15.6% Share)</b>
+                    <span class="badge badge-blue">กำลังผลิตสูงอันดับ 4</span>
+                </div>
+                <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+                    <p>• <b>เดือนที่ยอดผลิตน้อย (ควรซ่อม):</b> <span style="color:#34d399; font-weight:600;">ธ.ค. (515k - ดรอปลงถึง -37%), ม.ค. (685k), ก.ย. (690k)</span></p>
+                    <p>• <b>เดือนที่ยอดผลิตมาก (ห้ามหยุด):</b> <span style="color:#f87171; font-weight:600;">มี.ค. (1.16M), ก.ค. (1.03M), ส.ค. (920k)</span></p>
+                    <p style="margin-top: 6px; padding: 8px; background: rgba(52, 211, 153, 0.08); border-radius: 6px;">
+                        🛠️ <b>ช่วงเวลาที่ควรซ่อมบำรุงใหญ่:</b> <b>ธันวาคม (สัปดาห์สุดท้าย)</b><br>
+                        💡 ในเดือน ธ.ค. ยอดผลิต M4 ลดลงฮวบเหลือเพียง 5.1 แสนหน่วย เป็นจังหวะที่ดีที่สุดในการ Overhaul
+                    </p>
+                </div>
+            </div>
+
+            <!-- M5 -->
+            <div class="chart-card" style="border-left: 4px solid #fbbf24;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <b style="color: #fbbf24; font-size: 16px;">เครื่อง M5 (Moderate Volume - 9.6% Share)</b>
+                    <span class="badge badge-amber">เสี่ยง Breakdown สูง</span>
+                </div>
+                <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+                    <p>• <b>เดือนที่ยอดผลิตน้อย (ควรซ่อม):</b> <span style="color:#34d399; font-weight:600;">ธ.ค. (240k - ดรอป -54%), เม.ย. (407k), ก.พ. (421k)</span></p>
+                    <p>• <b>เดือนที่ยอดผลิตมาก (ห้ามหยุด):</b> <span style="color:#f87171; font-weight:600;">ส.ค. (705k), ต.ค. (692k), ก.ย. (663k)</span></p>
+                    <p style="margin-top: 6px; padding: 8px; background: rgba(251, 191, 36, 0.08); border-radius: 6px;">
+                        🛠️ <b>ช่วงเวลาที่ควรซ่อมบำรุงใหญ่:</b> <b>ธันวาคม หรือ เมษายน</b><br>
+                        ⚠️ เคยมีประวัติชำรุดฉุกเฉินจนผลผลิตเหลือ 26 หน่วยในปี 2022 ต้องเน้นเปลี่ยนอะไหล่สึกหรอตามรอบเวลา
+                    </p>
+                </div>
+            </div>
+
+            <!-- M8 -->
+            <div class="chart-card" style="border-left: 4px solid #0d9488;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <b style="color: #fb923c; font-size: 16px;">เครื่อง M8 (Moderate Volume - 8.8% Share)</b>
+                    <span class="badge badge-amber">ขนาดกลาง</span>
+                </div>
+                <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+                    <p>• <b>เดือนที่ยอดผลิตน้อย (ควรซ่อม):</b> <span style="color:#34d399; font-weight:600;">มี.ค. (331k), ธ.ค. (400k), ก.ย. (420k)</span></p>
+                    <p>• <b>เดือนที่ยอดผลิตมาก (ห้ามหยุด):</b> <span style="color:#f87171; font-weight:600;">ส.ค. (642k), พ.ค. (579k), ก.พ. (573k)</span></p>
+                    <p style="margin-top: 6px; padding: 8px; background: rgba(251, 146, 60, 0.08); border-radius: 6px;">
+                        🛠️ <b>ช่วงเวลาที่ควรซ่อมบำรุงใหญ่:</b> <b>มีนาคม หรือ ธันวาคม</b>
+                    </p>
+                </div>
+            </div>
+
+            <!-- M7 -->
+            <div class="chart-card" style="border-left: 4px solid #f43f5e;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <b style="color: #a78bfa; font-size: 16px;">เครื่อง M7 (Support Line - 7.1% Share)</b>
+                    <span class="badge badge-blue">สายสนับสนุน</span>
+                </div>
+                <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+                    <p>• <b>เดือนที่ยอดผลิตน้อย (ควรซ่อม):</b> <span style="color:#34d399; font-weight:600;">พ.ย. (274k), ธ.ค. (284k), ต.ค. (307k)</span></p>
+                    <p>• <b>เดือนที่ยอดผลิตมาก (ห้ามหยุด):</b> <span style="color:#f87171; font-weight:600;">เม.ย. (446k), มี.ค. (427k), มิ.ย. (403k)</span></p>
+                    <p style="margin-top: 6px; padding: 8px; background: rgba(167, 139, 250, 0.08); border-radius: 6px;">
+                        🛠️ <b>ช่วงเวลาที่ควรซ่อมบำรุงใหญ่:</b> <b>พฤศจิกายน – ธันวาคม</b> (หยุดซ่อมได้โดยไม่กระทบภาพรวม)
+                    </p>
+                </div>
+            </div>
+
+            <!-- M9 -->
+            <div class="chart-card" style="border-left: 4px solid #a3e635;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <b style="color: #c084fc; font-size: 16px;">เครื่อง M9 (New Strategic Asset - ติดตั้งปี 2026)</b>
+                    <span class="badge badge-purple">กำลังผลิตสำรองใหม่</span>
+                </div>
+                <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+                    <p>• <b>สถานะปัจจุบัน:</b> ไต่ระดับขึ้นสู่ <span style="color:#f87171; font-weight:600;">585,096 หน่วย ในเดือน ก.ย. 2026</span></p>
+                    <p>• <b>บทบาทเชิงกลยุทธ์:</b> ใช้เป็น <b>Swing Line</b> รองรับยอดผลิตแทนเครื่องอื่นที่เข้าซ่อมบำรุง</p>
+                    <p style="margin-top: 6px; padding: 8px; background: rgba(192, 132, 252, 0.08); border-radius: 6px;">
+                        🛠️ <b>ช่วงเวลาที่ควรซ่อมบำรุงใหญ่:</b> ตรวจเช็คตามระยะ 1,000 ชั่วโมงแรกในช่วง <b>Q1 2027</b>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2: HISTORICAL YOY COMPARISON -->
+    <div id="tab-yoy" class="tab-pane">
+        <div class="chart-card" style="margin-bottom: 24px;">
+            <div class="chart-header">
+                <div>
+                    <h3 class="chart-title">
+                        <i data-lucide="bar-chart-3" style="color: #38bdf8;"></i>
+                        เปรียบเทียบยอดผลิต Input รายเดือน ย้อนหลัง 6 ปี (2021 - 2026 Monthly Comparison)
+                    </h3>
+                    <p class="chart-desc">
+                        แท่งกราฟเปรียบเทียบในแต่ละเดือนของปี 2021, 2022, 2023, 2024, 2025 และ 2026 เคียงข้างกัน เห็นรูปแบบความหนาแน่นชัดเจน
+                    </p>
+                </div>
+            </div>
+            <div class="chart-container" style="height: 420px;">
+                <canvas id="groupedBarChart"></canvas>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div>
+                        <h3 class="chart-title"><i data-lucide="trending-up" style="color: #38bdf8;"></i> เส้นแนวโน้ม 12 เดือน เปรียบเทียบ 6 ปี (YoY Trend Overlay)</h3>
+                        <p class="chart-desc">สังเกตจุดหักหัวลงในเดือน ธ.ค. และจุดกระโดดขึ้นในเดือน พ.ค.</p>
+                    </div>
+                </div>
+                <div class="chart-container" style="height: 330px;">
+                    <canvas id="yoyLineChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div>
+                        <h3 class="chart-title"><i data-lucide="layers" style="color: #38bdf8;"></i> ยอดผลผลิตรวมในแต่ละปี (Annual Total Volume)</h3>
+                        <p class="chart-desc">ปี 2025 ทำสถิติสูงสุด 67.7M และปี 2026 ทำได้ 43.8M ใน 9 เดือนแรก</p>
+                    </div>
+                </div>
+                <div class="chart-container" style="height: 330px;">
+                    <canvas id="annualTotalChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: SINGLE-YEAR DEEP DIVE -->
+    <div id="tab-single-year" class="tab-pane">
+        <div class="controls-card">
+            <div class="filter-group">
+                <span class="filter-label">เลือกปีที่ต้องการเจาะลึก 12 เดือน:</span>
+                <button class="filter-pill active" onclick="selectYearDeepDive(2021, this)">ปี 2021</button>
+                <button class="filter-pill" onclick="selectYearDeepDive(2022, this)">ปี 2022</button>
+                <button class="filter-pill" onclick="selectYearDeepDive(2023, this)">ปี 2023</button>
+                <button class="filter-pill" onclick="selectYearDeepDive(2024, this)">ปี 2024</button>
+                <button class="filter-pill" onclick="selectYearDeepDive(2025, this)">ปี 2025</button>
+                <button class="filter-pill" onclick="selectYearDeepDive(2026, this)">ปี 2026 (9M)</button>
+            </div>
+            <span id="selectedYearBadge" class="badge badge-purple" style="font-size: 14px;">เจาะลึกข้อมูลปี 2021</span>
+        </div>
+
+        <div class="kpi-grid" id="singleYearKpiContainer">
+            <!-- Dynamically populated -->
+        </div>
+
+        <div class="chart-card" style="margin-bottom: 24px;">
+            <div class="chart-header">
+                <div>
+                    <h3 class="chart-title">
+                        <i data-lucide="bar-chart" style="color: #38bdf8;"></i>
+                        โครงสร้างยอดผลิต 12 เดือน แยกตามเครื่องจักร (M1 - M9)
+                    </h3>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="singleYearStackedChart"></canvas>
+            </div>
+        </div>
+
+        <div class="custom-table-wrapper" style="padding: 20px;">
+            <h4 style="font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 8px;" id="yearCommentTitle">บทวิเคราะห์ประจำปี</h4>
+            <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6;" id="yearCommentText"></p>
+        </div>
+    </div>
+
+    <!-- TAB 4: MACHINE HISTORICAL TRACKER -->
+    <div id="tab-machine-hist" class="tab-pane">
+        <div class="controls-card">
+            <div class="filter-group">
+                <span class="filter-label">เลือกเครื่องจักรเพื่อดูประวัติย้อนหลัง 6 ปี:</span>
+                <button class="filter-pill active" onclick="selectMachineTrack('M1', this)">เครื่อง M1</button>
+                <button class="filter-pill" onclick="selectMachineTrack('M3', this)">เครื่อง M3</button>
+                <button class="filter-pill" onclick="selectMachineTrack('M4', this)">เครื่อง M4</button>
+                <button class="filter-pill" onclick="selectMachineTrack('M5', this)">เครื่อง M5</button>
+                <button class="filter-pill" onclick="selectMachineTrack('M6', this)">เครื่อง M6</button>
+                <button class="filter-pill" onclick="selectMachineTrack('M7', this)">เครื่อง M7</button>
+                <button class="filter-pill" onclick="selectMachineTrack('M8', this)">เครื่อง M8</button>
+                <button class="filter-pill" onclick="selectMachineTrack('M9', this)">เครื่อง M9 (ใหม่)</button>
+            </div>
+            <span id="selectedMachineBadge" class="badge badge-blue" style="font-size: 14px;">เครื่อง M1</span>
+        </div>
+
+        <div class="chart-card" style="margin-bottom: 24px;">
+            <div class="chart-header">
+                <div>
+                    <h3 class="chart-title">
+                        <i data-lucide="activity" style="color: #38bdf8;"></i>
+                        แนวโน้มการผลิตรายเดือนย้อนหลัง 6 ปี (2021-2026) ของเครื่องจักร
+                    </h3>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="machineHistoryChart"></canvas>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="chart-card">
+                <h4 style="font-size: 15px; font-weight: 700; color: #38bdf8; margin-bottom: 10px;">
+                    <i data-lucide="info"></i> ข้อมูลภาพรวมของเครื่องจักรนี้
+                </h4>
+                <div id="machineStatsBox" style="font-size: 13px; color: #cbd5e1; line-height: 1.8;"></div>
+            </div>
+            <div class="chart-card">
+                <h4 style="font-size: 15px; font-weight: 700; color: #34d399; margin-bottom: 10px;">
+                    <i data-lucide="check-circle"></i> คำแนะนำช่วงเวลาซ่อมบำรุงใหญ่สำหรับเครื่องนี้
+                </h4>
+                <div id="machineAdviceBox" style="font-size: 13px; color: #cbd5e1; line-height: 1.8;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 5: STRATEGY & ROADMAP -->
+    <div id="tab-strategy" class="tab-pane">
+        <div class="matrix-box">
+            <h3 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px;">
+                สรุปกรอบกลยุทธ์การวางแผน Major Maintenance (Turnaround Action Plan)
+            </h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+                จัดทำขึ้นจากข้อมูลสถิติจริง 6 ปี เพื่อให้ฝ่ายวิศวกรรมและฝ่ายวางแผนการผลิตมีข้อตกลงร่วมกัน
+            </p>
+
+            <div class="window-card green-win">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <b style="color: #34d399; font-size: 16px;">1. แผนหลัก (Annual Shutdown): ธันวาคม (สัปดาห์สุดท้ายถึงปีใหม่)</b>
+                    <span class="badge badge-green">เกรด A+ (แนะนำสูงสุด)</span>
+                </div>
+                <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+                    <b>เหตุผลสนับสนุน:</b> ในประวัติศาสตร์ 6 ปี เดือนธันวาคมมียอดผลิตเฉลี่ยเพียง <b>3.85M หน่วย</b> (ต่ำกว่าค่าเฉลี่ยปกติถึง -27%) ในปี 2022 โรงงานเคยชัตดาวน์ใหญ่ในเดือนนี้จนยอดผลิตเหลือเพียง 1.97M โดยไม่กระทบธุรกิจ การหยุดช่วง 20 ธ.ค. – 5 ม.ค. จึงกระทบลูกค้าน้อยที่สุด
+                    <br>
+                    <b>เครื่องที่ควรเข้าซ่อม:</b> Utility ส่วนกลาง + M1, M4, M5, M6, M7, M8
+                </p>
+            </div>
+
+            <div class="window-card amber-win">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <b style="color: #fbbf24; font-size: 16px;">2. แผนสำรอง (Staggered Rolling): กุมภาพันธ์ & เมษายน</b>
+                    <span class="badge badge-amber">เกรด A- (สลับซ่อม)</span>
+                </div>
+                <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+                    <b>กุมภาพันธ์:</b> มีวันทำงานเพียง 28 วัน ยอดผลิตเฉลี่ยต่ำอันดับ 2 (4.75M) และเครื่อง <b>M3 มียอดผลิตต่ำสุดเป็นพิเศษในเดือนนี้ (849k)</b> จึงเหมาะมากสำหรับการ Overhaul เครื่อง M3 เพียงเครื่องเดียวโดยให้ M1 + M9 ช่วยผลิตแทน
+                    <br>
+                    <b>เมษายน:</b> อาศัยช่วงหยุดสงกรานต์ 5-7 วัน ซ่อมบำรุงเครื่อง <b>M6</b> ที่มียอดตกในเดือน เม.ย.
+                </p>
+            </div>
+
+            <div class="window-card red-win">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <b style="color: #f87171; font-size: 16px;">3. ช่วงห้ามหยุดเด็ดขาด (Blackout Zone): พฤษภาคม และ มีนาคม</b>
+                    <span class="badge badge-red">ห้ามปิดซ่อมใหญ่!</span>
+                </div>
+                <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+                    เดือนพฤษภาคมมียอดผลิตสูงที่สุดในรอบปี (เฉลี่ย 5.87M – 6.70M) และมีนาคมเป็นเดือนปิดงวด Q1 (5.61M) การหยุดเครื่องจักรหลักในช่วงนี้จะทำให้สูญเสียรายได้และเกิดปัญหาส่งมอบล่าช้าทันที
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 6: MASTER DATA -->
+    <div id="tab-data" class="tab-pane">
+        <div class="controls-card">
+            <div class="filter-group">
+                <span class="filter-label">เลือกปี:</span>
+                <button class="filter-pill active" onclick="filterTableYear('ALL', this)">ทั้งหมด</button>
+                <button class="filter-pill" onclick="filterTableYear('2021', this)">2021</button>
+                <button class="filter-pill" onclick="filterTableYear('2022', this)">2022</button>
+                <button class="filter-pill" onclick="filterTableYear('2023', this)">2023</button>
+                <button class="filter-pill" onclick="filterTableYear('2024', this)">2024</button>
+                <button class="filter-pill" onclick="filterTableYear('2025', this)">2025</button>
+                <button class="filter-pill" onclick="filterTableYear('2026', this)">2026</button>
+            </div>
+            <div>
+                <input type="text" id="searchInput" placeholder="ค้นหาข้อมูล..." onkeyup="searchTable()" style="background: var(--bg-card); border: 1px solid var(--border-color); color: #fff; padding: 8px 14px; border-radius: 8px; font-size: 13px; outline: none; width: 220px;">
+            </div>
+        </div>
+
+        <div class="custom-table-wrapper">
+            <div class="table-header-bar">
+                <h3 style="font-size: 16px; font-weight: 700; color: #fff;">ตารางข้อมูลจริงรายเดือน (69 รายการ)</h3>
+                <span id="rowCountBadge" class="badge badge-blue">แสดง 69 รายการ</span>
+            </div>
+            <div style="overflow-x: auto; max-height: 550px;">
+                <table class="exec-table" id="masterTable">
+                    <thead>
+                        <tr style="position: sticky; top: 0; z-index: 10;">
+                            <th>ปี</th>
+                            <th>เดือน</th>
+                            <th class="num-cell">M1</th>
+                            <th class="num-cell">M3</th>
+                            <th class="num-cell">M4</th>
+                            <th class="num-cell">M5</th>
+                            <th class="num-cell">M6</th>
+                            <th class="num-cell">M7</th>
+                            <th class="num-cell">M8</th>
+                            <th class="num-cell">M9</th>
+                            <th class="num-cell" style="background: #1e293b; color: #38bdf8;">ยอดรวม Total</th>
+                            <th>สถานะ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="masterTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>รายงานและแดชบอร์ดนี้จัดทำขึ้นสำหรับการวิเคราะห์ของผู้บริหารเพื่อการวางแผน Major Maintenance โรงงาน</p>
+        <p style="margin-top: 4px; font-size: 12px; opacity: 0.7;">แหล่งข้อมูล: Input 2021-2026.xlsx | ข้อมูลตั้งแต่ปี 2021 ถึง กันยายน 2026</p>
+    </footer>
+</div>
+
+<script>
+    lucide.createIcons();
+
+    
+
+
+    const rawData = [{"Year": 2021, "Month_Num": 1, "Month": "Jan", "M1": 689767, "M3": 1767938, "M4": 932762, "M5": 583634, "M6": 892742, "M7": 378376, "M8": 897853, "Total": 6143072}, {"Year": 2021, "Month_Num": 2, "Month": "Feb", "M1": 906006, "M3": 991982, "M4": 766083, "M5": 414960, "M6": 866446, "M7": 296610, "M8": 779949, "Total": 5022036}, {"Year": 2021, "Month_Num": 3, "Month": "Mar", "M1": 1558400, "M3": 1123341, "M4": 1536809, "M5": 540959, "M6": 687082, "M7": 356888, "M8": 287801, "Total": 6091280}, {"Year": 2021, "Month_Num": 4, "Month": "Apr", "M1": 1122452, "M3": 1263000, "M4": 1180872, "M5": 284115, "M6": 818571, "M7": 288405, "M8": 799520, "Total": 5756935}, {"Year": 2021, "Month_Num": 5, "Month": "May", "M1": 1073226, "M3": 1095309, "M4": 1125216, "M5": 536485, "M6": 1149606, "M7": 338364, "M8": 686704, "Total": 6004910}, {"Year": 2021, "Month_Num": 6, "Month": "Jun", "M1": 1123241, "M3": 1132055, "M4": 614976, "M5": 198181, "M6": 977352, "M7": 235943, "M8": 741746, "Total": 5023494}, {"Year": 2021, "Month_Num": 7, "Month": "Jul", "M1": 972257, "M3": 681631, "M4": 924848, "M5": 193170, "M6": 1010610, "M7": 262014, "M8": 437046, "Total": 4481576}, {"Year": 2021, "Month_Num": 8, "Month": "Aug", "M1": 1250651, "M3": 1066691, "M4": 827788, "M5": 328584, "M6": 1020855, "M7": 274243, "M8": 585113, "Total": 5353925}, {"Year": 2021, "Month_Num": 9, "Month": "Sept", "M1": 1101503, "M3": 1621676, "M4": 1264426, "M5": 408264, "M6": 963571, "M7": 354491, "M8": 792815, "Total": 6506746}, {"Year": 2021, "Month_Num": 10, "Month": "Oct", "M1": 1297156, "M3": 1559936, "M4": 753944, "M5": 443989, "M6": 1068545, "M7": 479174, "M8": 1005015, "Total": 6607759}, {"Year": 2021, "Month_Num": 11, "Month": "Nov", "M1": 1205648, "M3": 1164590, "M4": 845329, "M5": 314018, "M6": 871800, "M7": 307846, "M8": 934529, "Total": 5643760}, {"Year": 2021, "Month_Num": 12, "Month": "Dec", "M1": 1030596, "M3": 849616, "M4": 561164, "M5": 219695, "M6": 260092, "M7": 379811, "M8": 794052, "Total": 4095026}, {"Year": 2022, "Month_Num": 1, "Month": "Jan", "M1": 747753, "M3": 1419507, "M4": 684977, "M5": 534192, "M6": 1292447, "M7": 337517, "M8": 630854, "Total": 5647247}, {"Year": 2022, "Month_Num": 2, "Month": "Feb", "M1": 1495815, "M3": 825315, "M4": 827360, "M5": 601220, "M6": 923598, "M7": 431187, "M8": 589049, "Total": 5693544}, {"Year": 2022, "Month_Num": 3, "Month": "Mar", "M1": 1296269, "M3": 1188840, "M4": 1301329, "M5": 547144, "M6": 583134, "M7": 463862, "M8": 267302, "Total": 5647880}, {"Year": 2022, "Month_Num": 4, "Month": "Apr", "M1": 1217773, "M3": 1499867, "M4": 799640, "M5": 576266, "M6": 752865, "M7": 680970, "M8": 527136, "Total": 6054517}, {"Year": 2022, "Month_Num": 5, "Month": "May", "M1": 1006551, "M3": 1524910, "M4": 772175, "M5": 492889, "M6": 998241, "M7": 375610, "M8": 422516, "Total": 5592892}, {"Year": 2022, "Month_Num": 6, "Month": "Jun", "M1": 1320331, "M3": 1518294, "M4": 522585, "M5": 345201, "M6": 863293, "M7": 393147, "M8": 762721, "Total": 5725572}, {"Year": 2022, "Month_Num": 7, "Month": "Jul", "M1": 886198, "M3": 251429, "M4": 1149169, "M5": 1268685, "M6": 1039631, "M7": 359522, "M8": 801414, "Total": 5756048}, {"Year": 2022, "Month_Num": 8, "Month": "Aug", "M1": 365054, "M3": 494113, "M4": 1332077, "M5": 1217703, "M6": 1051763, "M7": 338382, "M8": 926706, "Total": 5725798}, {"Year": 2022, "Month_Num": 9, "Month": "Sept", "M1": 980262, "M3": 1549908, "M4": 360480, "M5": 879410, "M6": 497192, "M7": 252674, "M8": 468405, "Total": 4988331}, {"Year": 2022, "Month_Num": 10, "Month": "Oct", "M1": 661994, "M3": 623938, "M4": 1123169, "M5": 986336, "M6": 869625, "M7": 129062, "M8": 313817, "Total": 4707941}, {"Year": 2022, "Month_Num": 11, "Month": "Nov", "M1": 1310476, "M3": 1668207, "M4": 893977, "M5": 875035, "M6": 856912, "M7": 345744, "M8": 452595, "Total": 6402946}, {"Year": 2022, "Month_Num": 12, "Month": "Dec", "M1": 209732, "M3": 536592, "M4": 697521, "M5": 26, "M6": 204819, "M7": 184241, "M8": 139332, "Total": 1972263}, {"Year": 2023, "Month_Num": 1, "Month": "Jan", "M1": 900861, "M3": 884719, "M4": 883477, "M5": 453939, "M6": 735465, "M7": 382842, "M8": 110794, "Total": 4352097}, {"Year": 2023, "Month_Num": 2, "Month": "Feb", "M1": 601353, "M3": 670124, "M4": 750446, "M5": 351301, "M6": 675883, "M7": 279235, "M8": 504676, "Total": 3833018}, {"Year": 2023, "Month_Num": 3, "Month": "Mar", "M1": 871640, "M3": 823918, "M4": 1039656, "M5": 760796, "M6": 1167357, "M7": 541018, "M8": 408202, "Total": 5612587}, {"Year": 2023, "Month_Num": 4, "Month": "Apr", "M1": 919030, "M3": 828032, "M4": 635693, "M5": 469456, "M6": 647209, "M7": 412619, "M8": 377851, "Total": 4289890}, {"Year": 2023, "Month_Num": 5, "Month": "May", "M1": 1085162, "M3": 1295032, "M4": 574350, "M5": 485008, "M6": 710369, "M7": 410938, "M8": 190235, "Total": 4751094}, {"Year": 2023, "Month_Num": 6, "Month": "Jun", "M1": 1090368, "M3": 867507, "M4": 1130066, "M5": 362462, "M6": 783748, "M7": 596151, "M8": 432686, "Total": 5262988}, {"Year": 2023, "Month_Num": 7, "Month": "Jul", "M1": 1436835, "M3": 1356637, "M4": 1444220, "M5": 342393, "M6": 473844, "M7": 517261, "M8": 445304, "Total": 6016494}, {"Year": 2023, "Month_Num": 8, "Month": "Aug", "M1": 460247, "M3": 1170856, "M4": 596754, "M5": 1029498, "M6": 160990, "M7": 189868, "M8": 918166, "Total": 4526379}, {"Year": 2023, "Month_Num": 9, "Month": "Sept", "M1": 1265021, "M3": 1003003, "M4": 523332, "M5": 506170, "M6": 633021, "M7": 406262, "M8": 365899, "Total": 4702708}, {"Year": 2023, "Month_Num": 10, "Month": "Oct", "M1": 635363, "M3": 688434, "M4": 824070, "M5": 674100, "M6": 497729, "M7": 191699, "M8": 244729, "Total": 3756124}, {"Year": 2023, "Month_Num": 11, "Month": "Nov", "M1": 1598879, "M3": 848067, "M4": 426549, "M5": 475302, "M6": 978532, "M7": 164497, "M8": 113857, "Total": 4605683}, {"Year": 2023, "Month_Num": 12, "Month": "Dec", "M1": 981709, "M3": 889825, "M4": 488669, "M5": 220036, "M6": 968377, "M7": 360760, "M8": 119223, "Total": 4028599}, {"Year": 2024, "Month_Num": 1, "Month": "Jan", "M1": 1341691, "M3": 888839, "M4": 347998, "M5": 329427, "M6": 684789, "M7": 338134, "M8": 145100, "Total": 4075978}, {"Year": 2024, "Month_Num": 2, "Month": "Feb", "M1": 750617, "M3": 925500, "M4": 614165, "M5": 72460, "M6": 987416, "M7": 361172, "M8": 464497, "Total": 4175827}, {"Year": 2024, "Month_Num": 3, "Month": "Mar", "M1": 1083110, "M3": 1194134, "M4": 1051381, "M5": 361339, "M6": 941955, "M7": 432899, "M8": 413698, "Total": 5478516}, {"Year": 2024, "Month_Num": 4, "Month": "Apr", "M1": 1342380, "M3": 1291283, "M4": 830039, "M5": 341773, "M6": 328564, "M7": 426358, "M8": 505523, "Total": 5065920}, {"Year": 2024, "Month_Num": 5, "Month": "May", "M1": 1274568, "M3": 1692659, "M4": 626407, "M5": 794440, "M6": 997524, "M7": 433742, "M8": 782436, "Total": 6601776}, {"Year": 2024, "Month_Num": 6, "Month": "Jun", "M1": 726642, "M3": 862907, "M4": 1072681, "M5": 758945, "M6": 986820, "M7": 379083, "M8": 435819, "Total": 5222897}, {"Year": 2024, "Month_Num": 7, "Month": "Jul", "M1": 991199, "M3": 992049, "M4": 514067, "M5": 188752, "M6": 714528, "M7": 198950, "M8": 554241, "Total": 4153786}, {"Year": 2024, "Month_Num": 8, "Month": "Aug", "M1": 820930, "M3": 1292582, "M4": 748849, "M5": 422527, "M6": 755598, "M7": 299151, "M8": 209223, "Total": 4548860}, {"Year": 2024, "Month_Num": 9, "Month": "Sept", "M1": 1180961, "M3": 840810, "M4": 428398, "M5": 491557, "M6": 967119, "M7": 378710, "M8": 268436, "Total": 4555991}, {"Year": 2024, "Month_Num": 10, "Month": "Oct", "M1": 890015, "M3": 839672, "M4": 621520, "M5": 333401, "M6": 520972, "M7": 310955, "M8": 237268, "Total": 3753803}, {"Year": 2024, "Month_Num": 11, "Month": "Nov", "M1": 1289366, "M3": 607202, "M4": 1036004, "M5": 220635, "M6": 711153, "M7": 266071, "M8": 233602, "Total": 4364033}, {"Year": 2024, "Month_Num": 12, "Month": "Dec", "M1": 1376379, "M3": 1090923, "M4": 395197, "M5": 405074, "M6": 942484, "M7": 200854, "M8": 300868, "Total": 4711779}, {"Year": 2025, "Month_Num": 1, "Month": "Jan", "M1": 1209527, "M3": 1349471, "M4": 575187, "M5": 418087, "M6": 763255, "M7": 374480, "M8": 505310, "Total": 5195317}, {"Year": 2025, "Month_Num": 2, "Month": "Feb", "M1": 732551, "M3": 833144, "M4": 729609, "M5": 667974, "M6": 885569, "M7": 630759, "M8": 526297, "Total": 5005903}, {"Year": 2025, "Month_Num": 3, "Month": "Mar", "M1": 1361768, "M3": 1009753, "M4": 877037, "M5": 663251, "M6": 684610, "M7": 338263, "M8": 280072, "Total": 5214754}, {"Year": 2025, "Month_Num": 4, "Month": "Apr", "M1": 1191133, "M3": 975023, "M4": 465052, "M5": 363130, "M6": 649482, "M7": 420648, "M8": 100794, "Total": 4165262}, {"Year": 2025, "Month_Num": 5, "Month": "May", "M1": 1092540, "M3": 1235721, "M4": 1202158, "M5": 573171, "M6": 1063578, "M7": 413380, "M8": 814438, "Total": 6394986}, {"Year": 2025, "Month_Num": 6, "Month": "Jun", "M1": 1511622, "M3": 1140704, "M4": 458136, "M5": 828171, "M6": 809833, "M7": 410339, "M8": 267470, "Total": 5426275}, {"Year": 2025, "Month_Num": 7, "Month": "Jul", "M1": 1250360, "M3": 1291010, "M4": 1113990, "M5": 676019, "M6": 941571, "M7": 517556, "M8": 409496, "Total": 6200002}, {"Year": 2025, "Month_Num": 8, "Month": "Aug", "M1": 1552150, "M3": 1415082, "M4": 1093228, "M5": 526496, "M6": 987794, "M7": 581392, "M8": 573189, "Total": 6729331}, {"Year": 2025, "Month_Num": 9, "Month": "Sept", "M1": 1468774, "M3": 829975, "M4": 871780, "M5": 1030266, "M6": 1361662, "M7": 494235, "M8": 204379, "Total": 6261071}, {"Year": 2025, "Month_Num": 10, "Month": "Oct", "M1": 1667643, "M3": 1445839, "M4": 836387, "M5": 1019745, "M6": 860090, "M7": 423758, "M8": 507234, "Total": 6760696}, {"Year": 2025, "Month_Num": 11, "Month": "Nov", "M1": 1451792, "M3": 1443671, "M4": 878608, "M5": 533808, "M6": 925358, "M7": 286979, "M8": 389138, "Total": 5909354}, {"Year": 2025, "Month_Num": 12, "Month": "Dec", "M1": 903925, "M3": 1125570, "M4": 435232, "M5": 356224, "M6": 689768, "M7": 293127, "M8": 645808, "Total": 4449654}, {"Year": 2026, "Month_Num": 1, "Month": "Jan", "M1": 1413443, "M3": 978131, "M4": 682434, "M5": 555379, "M6": 585680, "M7": 286835, "M8": 225359, "M9": 0, "Total": 4727261}, {"Year": 2026, "Month_Num": 2, "Month": "Feb", "M1": 1244870, "M3": 672471, "M4": 465726, "M5": 290217, "M6": 616537, "M7": 219342, "M8": 76094, "M9": 0, "Total": 3585257}, {"Year": 2026, "Month_Num": 3, "Month": "Mar", "M1": 992868, "M3": 1420293, "M4": 131004, "M5": 267199, "M6": 1336672, "M7": 229867, "M8": 38694, "M9": 11663, "Total": 4428260}, {"Year": 2026, "Month_Num": 4, "Month": "Apr", "M1": 835672, "M3": 895916, "M4": 636813, "M5": 328911, "M6": 698765, "M7": 423021, "M8": 304786, "M9": 33433, "Total": 4157317}, {"Year": 2026, "Month_Num": 5, "Month": "May", "M1": 1920758, "M3": 1345919, "M4": 1143093, "M5": 319638, "M6": 1136270, "M7": 510465, "M8": 228119, "M9": 99482, "Total": 6703744}, {"Year": 2026, "Month_Num": 6, "Month": "Jun", "M1": 1080273, "M3": 966964, "M4": 821527, "M5": 419526, "M6": 1051805, "M7": 338233, "M8": 533573, "M9": 15481, "Total": 5227382}, {"Year": 2026, "Month_Num": 7, "Month": "Jul", "M1": 1735218, "M3": 1038141, "M4": 1015517, "M5": 425359, "M6": 1100575, "M7": 346361, "M8": 204103, "M9": 381415, "Total": 6246689}, {"Year": 2026, "Month_Num": 8, "Month": "Aug", "M1": 704136, "M3": 811386, "M4": 590713, "M5": 23354, "M6": 914111, "M7": 477724, "M8": 141621, "M9": 327250, "Total": 3990295}, {"Year": 2026, "Month_Num": 9, "Month": "Sept", "M1": 787319, "M3": 957355, "M4": 839571, "M5": 75356, "M6": 753493, "M7": 357766, "M8": 328875, "M9": 585096, "Total": 4684831}];
+    const years = [2021, 2022, 2023, 2024, 2025, 2026];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthsTh = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+    const machKeys = ['M1', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'];
+
+    // Professional High-Contrast Palette: Distinct hues that do not blend together
+    // Eye-Friendly Matte Executive Palette (สบายตา ไม่ฉูดฉาด ไม่แสบตา)
+    const colors = {
+        // Years (Refined Muted Hues)
+        '2021': '#64748b', // Slate Gray
+        '2022': '#0284c7', // Ocean Blue
+        '2023': '#d97706', // Warm Amber
+        '2024': '#059669', // Emerald Jade
+        '2025': '#e11d48', // Crimson Red
+        '2026': '#7c3aed', // Amethyst Purple
+
+        // Machines (8 Matte, Harmonious & Eye-Friendly Executive Colors)
+        'm1': '#0ea5e9', // ฟ้าครามนุ่มตา (Soft Sky Blue)
+        'm3': '#f97316', // ส้มพีชอบอุ่น ไม่แผดจ้า (Warm Coral)
+        'm4': '#059669', // เขียวหยกคลาสสิก ลึกนุ่ม (Sage Emerald)
+        'm5': '#d97706', // เหลืองอำพันอมน้ำตาล ไม่สะท้อนแสง (Warm Ochre)
+        'm6': '#8b5cf6', // ม่วงครามสุภาพ ละมุนตา (Muted Iris)
+        'm7': '#be185d', // ชมพูเบอร์รี่ตุ่นหรูหรา (Dusty Berry)
+        'm8': '#0f766e', // เขียวน้ำทะเลลึก สุขุม (Deep Ocean Teal)
+        'm9': '#65a30d'  // เขียวมะกอกธรรมชาติ (Natural Olive)
+    };
+
+    // Point styles to make lines distinguishable even when printed in B&W
+    const machPointStyles = {
+        'm1': 'circle',
+        'm3': 'rectRot', // diamond
+        'm4': 'triangle',
+        'm5': 'rect',
+        'm6': 'circle',
+        'm7': 'crossRot',
+        'm8': 'triangle',
+        'm9': 'rectRot'
+    };
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+        
+        event.currentTarget.classList.add('active');
+        const target = document.getElementById(tabId);
+        if (target) target.classList.add('active');
+
+        setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
+    }
+
+    
+    // =========================================================================
+    // MASTER VIEW SWITCHER: GRID (SMALL MULTIPLES) vs GROUPED BARS vs LINE
+    // =========================================================================
+    let currentMainAvgView = 'grid';
+
+    // --- TOGGLE GRID COLUMNS (4 COLS vs 2 COLS FOR WIDER CHARTS) ---
+    let currentGridCols = 4;
+    function toggleGridColumns(btn) {
+        const grid = document.getElementById('machineCardsGrid');
+        if (!grid) return;
+        const textSpan = document.getElementById('colToggleText');
+        if (currentGridCols === 4) {
+            currentGridCols = 2;
+            grid.style.gridTemplateColumns = 'repeat(2, minmax(0, 1fr))';
+            if (textSpan) textSpan.textContent = '4 แถวยาว';
+            btn.classList.add('active');
+        } else {
+            currentGridCols = 4;
+            grid.style.gridTemplateColumns = 'repeat(4, minmax(0, 1fr))';
+            if (textSpan) textSpan.textContent = '2 แถวคู่';
+            btn.classList.remove('active');
+        }
+        setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
+    }
+
+    let miniChartInstances = {};
+    let groupedChartInstance = null;
+    let isGroupedStacked = false;
+
+    function switchMainAvgView(view, btn) {
+        currentMainAvgView = view;
+        btn.parentElement.querySelectorAll('.filter-pill').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+
+        document.getElementById('viewModeGrid').style.display = (view === 'grid') ? 'block' : 'none';
+        document.getElementById('viewModeGrouped').style.display = (view === 'grouped') ? 'block' : 'none';
+        document.getElementById('viewModeLine').style.display = (view === 'line') ? 'block' : 'none';
+
+        if (view === 'grid') {
+            renderMiniCharts();
+        } else if (view === 'grouped') {
+            renderGroupedBarChart();
+        } else if (view === 'line') {
+            renderMainAvgChart();
+        }
+        setTimeout(function() { window.dispatchEvent(new Event('resize')); }, 50);
+    }
+
+    function toggleStackGrouped(btn) {
+        isGroupedStacked = !isGroupedStacked;
+        btn.textContent = isGroupedStacked ? 'สลับเป็นแบบ Grouped (แยกแท่ง)' : 'สลับเป็นแบบ Stacked (ซ้อนสะสม)';
+        renderGroupedBarChart();
+    }
+
+    // --- RENDER 8 MINI CHARTS (EXACTLY 1 MIN BAR = GREEN, 1 PEAK BAR = RED, NORMAL = BLUE) ---
+    function renderMiniCharts() {
+        const machList = ['M1', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'];
+        const monthLabelsTh = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+
+        machList.forEach(function(m) {
+            const canvas = document.getElementById('canvasMini' + m);
+            if (!canvas) return;
+
+            if (miniChartInstances[m]) {
+                miniChartInstances[m].destroy();
+            }
+
+            const vals = machAvgData[m] || [];
+            if (!vals.length) return;
+
+            // Find non-zero min and overall max
+            const nonZeroVals = vals.filter(function(v) { return v > 0; });
+            const minVal = nonZeroVals.length ? Math.min.apply(null, nonZeroVals) : 0;
+            const maxVal = Math.max.apply(null, vals);
+            const activeCount = (m === 'M9') ? nonZeroVals.length : 12;
+            const avgVal = activeCount > 0 ? Math.round(vals.reduce(function(a, b) { return a + b; }, 0) / activeCount) : 0;
+
+            // Find index of first min and first max to guarantee EXACTLY ONE GREEN AND ONE RED BAR
+            const minIdx = vals.indexOf(minVal);
+            const maxIdx = vals.indexOf(maxVal);
+
+            // 🟢 Green for Lowest (Optimal Turnaround)
+            // 🔴 Red for Highest (Blackout Peak)
+            // 🔵 Cool Slate Blue for Normal Months
+            const barColors = vals.map(function(v, idx) {
+                if (v === 0) return 'rgba(255,255,255,0.05)';
+                if (idx === minIdx && minVal > 0) return '#10b981'; // 🟢 เขียวสว่าง: ต่ำสุด
+                if (idx === maxIdx) return '#ef4444'; // 🔴 แดงสว่าง: สูงสุด
+                return 'rgba(56, 189, 248, 0.40)'; // 🔵 ฟ้าครามสุภาพ: เดือนปกติ
+            });
+
+            const borderColors = vals.map(function(v, idx) {
+                if (v === 0) return 'rgba(255,255,255,0.1)';
+                if (idx === minIdx && minVal > 0) return '#34d399';
+                if (idx === maxIdx) return '#f87171';
+                return '#38bdf8';
+            });
+
+                        // Custom Plugin to display average number cleanly on the LEFT side of dashed line
+            const avgLineLabelPlugin = {
+                id: 'avgLineLabel_' + m,
+                afterDatasetsDraw: function(chart) {
+                    if (!avgVal || avgVal <= 0) return;
+                    const yScale = chart.scales.y;
+                    if (!yScale) return;
+                    const yPos = yScale.getPixelForValue(avgVal);
+                    if (isNaN(yPos) || yPos < chart.chartArea.top || yPos > chart.chartArea.bottom) return;
+
+                    const ctx = chart.ctx;
+                    ctx.save();
+                    ctx.font = 'bold 8.5px Prompt, sans-serif';
+                    const text = 'เฉลี่ย ' + (avgVal >= 1000000 ? (avgVal/1000000).toFixed(2) + 'M' : Number(avgVal).toLocaleString());
+                    const textWidth = ctx.measureText(text).width;
+                    const xPos = chart.chartArea.left + 6;
+                    
+                    const badgeY = (yPos - 14 < chart.chartArea.top) ? (yPos + 2) : (yPos - 13);
+                    const textY = (yPos - 14 < chart.chartArea.top) ? (yPos + 11) : (yPos - 3);
+
+                    // Draw dark background pill
+                    ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+                    ctx.beginPath();
+                    if (ctx.roundRect) {
+                        ctx.roundRect(xPos, badgeY, textWidth + 8, 13, 3);
+                    } else {
+                        ctx.rect(xPos, badgeY, textWidth + 8, 13);
+                    }
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+
+                    // Draw crisp white text
+                    ctx.fillStyle = '#ffffff';
+                    ctx.textAlign = 'left';
+                    ctx.fillText(text, xPos + 4, textY);
+                    ctx.restore();
+                }
+            };
+
+            miniChartInstances[m] = new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                plugins: [avgLineLabelPlugin],
+                data: {
+                    labels: monthLabelsTh,
+                    datasets: [
+                        {
+                            label: 'ยอดผลิตเฉลี่ย ' + m,
+                            data: vals,
+                            backgroundColor: barColors,
+                            borderColor: borderColors,
+                            borderWidth: 1.5,
+                            borderRadius: 4,
+                            barPercentage: 0.82
+                        },
+                        {
+                            type: 'line',
+                            label: 'เฉลี่ยทั้งปี',
+                            data: Array(12).fill(avgVal),
+                            borderColor: 'rgba(255,255,255,0.7)',
+                            borderWidth: 1.8,
+                            borderDash: [5, 4],
+                            pointRadius: 0,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                title: function(ctx) { return 'เดือน ' + ctx[0].label; },
+                                label: function(ctx) {
+                                    if (ctx.datasetIndex === 1) return 'เส้นเฉลี่ยทั้งปี: ' + Number(ctx.parsed.y).toLocaleString() + ' หน่วย';
+                                    let str = 'ยอดเฉลี่ย: ' + Number(ctx.parsed.y).toLocaleString() + ' หน่วย';
+                                    if (ctx.dataIndex === minIdx && minVal > 0) str += ' (🟢 ต่ำสุดของปี: เหมาะซ่อมบำรุง)';
+                                    else if (ctx.dataIndex === maxIdx) str += ' (🔴 พีคสุดของปี: ห้ามหยุด)';
+                                    return str;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                color: '#cbd5e1',
+                                font: { family: 'Prompt', size: 8.5 },
+                                maxRotation: 45,
+                                minRotation: 0,
+                                autoSkip: false
+                            }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.03)' },
+                            ticks: {
+                                color: '#94a3b8',
+                                font: { size: 9 },
+                                callback: function(val) {
+                                    return (val >= 1000000 ? (val/1000000).toFixed(1) + 'M' : (val/1000).toFixed(0) + 'k');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+    // --- RENDER GROUPED BAR CHART BY MONTH ---
+    function renderGroupedBarChart() {
+        const canvas = document.getElementById('groupedMachineChart');
+        if (!canvas) return;
+
+        if (groupedChartInstance) {
+            groupedChartInstance.destroy();
+        }
+
+        const machList = ['M1', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8'];
+        const mColors = {
+            M1: '#0ea5e9', // ฟ้าครามนุ่มตา
+            M3: '#f97316', // ส้มพีชอบอุ่น
+            M4: '#059669', // เขียวหยกคลาสสิก
+            M5: '#d97706', // เหลืองอำพันนวลตา
+            M6: '#8b5cf6', // ม่วงครามสุภาพ
+            M7: '#be185d', // ชมพูเบอร์รี่ตุ่น
+            M8: '#0f766e', // เขียวน้ำทะเลลึก
+            M9: '#65a30d'  // เขียวมะกอกธรรมชาติ
+        };
+
+        const datasets = machList.map(function(m) {
+            return {
+                label: m + ((m === 'M1' || m === 'M3') ? ' (เสาหลัก)' : ''),
+                data: machAvgData[m],
+                backgroundColor: mColors[m],
+                borderColor: '#0a0f1d',
+                borderWidth: isGroupedStacked ? 1.5 : 0,
+                borderRadius: isGroupedStacked ? 2 : 4,
+                stack: isGroupedStacked ? 'total' : undefined
+            };
+        });
+
+        groupedChartInstance = new Chart(canvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { color: '#e2e8f0', font: { family: 'Prompt', size: 12 } }
+                    },
+                    tooltip: {
+                        mode: isGroupedStacked ? 'index' : 'point',
+                        callbacks: {
+                            label: function(ctx) {
+                                return ctx.dataset.label + ': ' + Number(ctx.parsed.y).toLocaleString() + ' หน่วย';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255,255,255,0.03)' },
+                        ticks: { color: '#cbd5e1', font: { family: 'Prompt', size: 11 } },
+                        stacked: isGroupedStacked
+                    },
+                    y: {
+                        grid: { color: 'rgba(255,255,255,0.03)' },
+                        ticks: {
+                            color: '#94a3b8',
+                            callback: function(val) {
+                                return (val >= 1000000 ? (val/1000000).toFixed(1) + 'M' : (val/1000).toFixed(0) + 'k');
+                            }
+                        },
+                        stacked: isGroupedStacked
+                    }
+                }
+            }
+        });
+    }
+
+    // --- TAB 1: ALL MACHINES COMPARATIVE CURVE CHART ---
+    const machAvgData = {
+        M1: [977920, 897268, 1234237, 1158554, 1106409, 1154441, 1107370, 889806, 1199304, 1030434, 1371232, 900468],
+        M3: [1262095, 849213, 1067997, 1171441, 1368726, 1104293, 914551, 1087865, 1169074, 1031564, 1146347, 898505],
+        M4: [684880, 737533, 1161242, 782259, 860061, 759689, 1029259, 919739, 689683, 831818, 816093, 515557],
+        M5: [463856, 421583, 574698, 406948, 576399, 498592, 533804, 704962, 663133, 691514, 483760, 240211],
+        M6: [873740, 867782, 812828, 639338, 983864, 884209, 836037, 795400, 884513, 763392, 868751, 613108],
+        M7: [362270, 399793, 426586, 445800, 394407, 402933, 371061, 336607, 377274, 306930, 274227, 283759],
+        M8: [457982, 572894, 331415, 462165, 579266, 528088, 529500, 642479, 419987, 461613, 424744, 399857],
+        M9: [0, 0, 11663, 33433, 99482, 15481, 381415, 327250, 585096, 0, 0, 0]
+    };
+
+    
+    // --- SWITCH AVG CHART MODE (ALL MACHINES vs SINGLE MACHINE BAR) ---
+    let currentAvgChartMode = 'ALL';
+    let allMachinesChartInstance = null;
+
+    function switchAvgChartMode(mode, btn) {
+        currentAvgChartMode = mode;
+        btn.parentElement.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderMiniCharts();
+    renderMainAvgChart();
+    }
+
+    function renderMainAvgChart() {
+        const canvas = document.getElementById('allMachinesCurveChart');
+        if (!canvas) return;
+
+        if (allMachinesChartInstance) {
+            allMachinesChartInstance.destroy();
+        }
+
+        if (currentAvgChartMode === 'ALL') {
+            // Render All Machines Line Chart
+            const curveDatasets = Object.keys(machAvgData).map(m => ({
+                label: m + ((m === 'M1' || m === 'M3') ? ' (เสาหลัก)' : ''),
+                data: machAvgData[m],
+                borderColor: colors[m.toLowerCase()],
+                backgroundColor: colors[m.toLowerCase()],
+                borderWidth: (m === 'M1' || m === 'M3') ? 3.5 : 2.5,
+                tension: 0.28,
+                pointRadius: 5,
+                pointHoverRadius: 8,
+                pointStyle: machPointStyles[m.toLowerCase()] || 'circle',
+                borderCapStyle: 'round'
+            }));
+
+            allMachinesChartInstance = new Chart(canvas.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+                    datasets: curveDatasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { color: '#e2e8f0', font: { family: 'Prompt', size: 12 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => ctx.dataset.label + ' (เฉลี่ย 5 ปี): ' + Number(ctx.parsed.y).toLocaleString() + ' หน่วย'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#94a3b8' } },
+                        y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#94a3b8', callback: val => (val/1000).toFixed(0) + 'k' } }
+                    }
+                }
+            });
+        } else {
+            // Render Single Machine Historical 5-Year Average Bar Chart
+            const m = currentAvgChartMode;
+            const vals = machAvgData[m];
+            const minVal = Math.min(...vals);
+            const maxVal = Math.max(...vals);
+            const avgVal = Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
+
+            const barColors = vals.map(v => {
+                if (v <= minVal * 1.08) return '#10b981'; // Green: Recommended maintenance
+                if (v >= maxVal * 0.92) return '#ef4444'; // Red: Peak
+                return colors[m.toLowerCase()] || '#38bdf8'; // Normal machine color
+            });
+
+            allMachinesChartInstance = new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+                    datasets: [
+                        {
+                            label: `ยอดผลิตเฉลี่ย 5 ปี ของเครื่อง ${m} (หน่วย)`,
+                            data: vals,
+                            backgroundColor: barColors,
+                            borderRadius: 6,
+                            borderWidth: 0
+                        },
+                        {
+                            type: 'line',
+                            label: `เส้นเฉลี่ยทั้งปีของ ${m} (${Number(avgVal).toLocaleString()} หน่วย/ด.)`,
+                            data: Array(12).fill(avgVal),
+                            borderColor: '#ffffff',
+                            borderWidth: 3,
+                            borderDash: [8, 5],
+                            pointRadius: 0,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { color: '#e2e8f0', font: { family: 'Prompt', size: 12 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    let str = ctx.dataset.label + ': ' + Number(ctx.parsed.y).toLocaleString() + ' หน่วย';
+                                    if (ctx.parsed.y === minVal) str += ' (🟢 ต่ำสุดของปี: ควรซ่อมบำรุง)';
+                                    else if (ctx.parsed.y === maxVal) str += ' (🔴 พีคสุดของปี: ห้ามหยุด)';
+                                    return str;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#94a3b8' } },
+                        y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#94a3b8', callback: val => (val/1000).toFixed(0) + 'k' } }
+                    }
+                }
+            });
+        }
+    }
+
+
+    // --- TAB 1: MACHINE MAINTENANCE SCHEDULE TABLE (WITH MODE SWITCHER) ---
+    let currentGridMode = 'AVG';
+
+    function switchGridMode(mode, btn) {
+        currentGridMode = mode;
+        btn.parentElement.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        populateMachineScheduleTable();
+    }
+
+    function populateMachineScheduleTable() {
+        const tbody = document.getElementById('machineScheduleTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        const scheduleAdvice = {
+            M1: { low: 'ธ.ค. (900k), ส.ค. (889k), ก.พ. (897k)', peak: 'พ.ย. (1.37M), มี.ค. (1.23M)' },
+            M3: { low: 'ก.พ. (849k - ต่ำสุด), ธ.ค. (898k)', peak: 'พ.ค. (1.37M), ม.ค. (1.26M)' },
+            M4: { low: 'ธ.ค. (515k - ดรอปฮวบ), ม.ค. (685k)', peak: 'มี.ค. (1.16M), ก.ค. (1.03M)' },
+            M5: { low: 'ธ.ค. (240k - ดรอป -54%), เม.ย. (407k)', peak: 'ส.ค. (705k), ต.ค. (692k)' },
+            M6: { low: 'ธ.ค. (613k), เม.ย. (639k - สงกรานต์)', peak: 'พ.ค. (984k), ก.ย. (885k)' },
+            M7: { low: 'พ.ย. (274k), ธ.ค. (284k), ต.ค. (307k)', peak: 'เม.ย. (446k), มี.ค. (427k)' },
+            M8: { low: 'มี.ค. (331k), ธ.ค. (400k), ก.ย. (420k)', peak: 'ส.ค. (642k), พ.ค. (579k)' }
+        };
+
+        const targetMachines = (currentGridMode === '2026') ? ['M1', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'] : ['M1', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8'];
+
+        targetMachines.forEach(m => {
+            let vals = [];
+            let isActualYear = (currentGridMode !== 'AVG');
+
+            if (!isActualYear) {
+                vals = machAvgData[m] || [];
+            } else {
+                const y = parseInt(currentGridMode);
+                const yRows = rawData.filter(d => d.Year === y);
+                for (let mon = 1; mon <= 12; mon++) {
+                    const found = yRows.find(d => d.Month_Num === mon);
+                    vals.push(found && found[m] !== undefined && found[m] !== null ? found[m] : null);
+                }
+            }
+
+            const validVals = vals.filter(v => v !== null);
+            const sum = validVals.reduce((a, b) => a + b, 0);
+            const avg = validVals.length > 0 ? Math.round(sum / validVals.length) : 0;
+            const minVal = validVals.length > 0 ? Math.min(...validVals.filter(v => v > 0)) : 0;
+            const maxVal = validVals.length > 0 ? Math.max(...validVals) : 0;
+
+            const tr = document.createElement('tr');
+            let rowHtml = `<td style="position: sticky; left: 0; background: #18264e; font-weight: 700; color: #38bdf8;">${m}</td>
+                           <td class="num-cell" style="font-weight: 700; color: #fff; background: rgba(255,255,255,0.03);">${avg.toLocaleString()}</td>`;
+
+            vals.forEach(v => {
+                if (v === null) {
+                    rowHtml += `<td class="num-cell" style="color: #64748b;">-</td>`;
+                    return;
+                }
+                let cellClass = 'heat-cell-normal';
+                if (v > 0 && (v <= minVal * 1.1 || v <= avg * 0.88)) {
+                    cellClass = 'heat-cell-green';
+                } else if (v >= maxVal * 0.92 || v >= avg * 1.12) {
+                    cellClass = 'heat-cell-red';
+                }
+                rowHtml += `<td class="${cellClass}">${Number(v).toLocaleString()}</td>`;
+            });
+
+            const adv = scheduleAdvice[m] || { low: 'ตามรอบระยะเวลา', peak: 'ตามคำสั่งซื้อ' };
+            rowHtml += `
+                <td style="color: #34d399; font-weight: 600; background: rgba(16, 185, 129, 0.08); font-size: 12px;">${adv.low}</td>
+                <td style="color: #f87171; font-weight: 600; background: rgba(239, 68, 68, 0.08); font-size: 12px;">${adv.peak}</td>
+            `;
+            tr.innerHTML = rowHtml;
+            tbody.appendChild(tr);
+        });
+
+        if (currentGridMode === 'AVG') {
+            const trM9 = document.createElement('tr');
+            trM9.innerHTML = `
+                <td style="position: sticky; left: 0; background: #18264e; font-weight: 700; color: #c084fc;">M9 (2026 จริง)</td>
+                <td class="num-cell" style="font-weight: 700; color: #c084fc; background: rgba(255,255,255,0.03);">161,535*</td>
+                <td class="heat-cell-normal">0</td>
+                <td class="heat-cell-normal">0</td>
+                <td class="heat-cell-green">11,663</td>
+                <td class="heat-cell-green">33,433</td>
+                <td class="heat-cell-green">99,482</td>
+                <td class="heat-cell-green">15,481</td>
+                <td class="heat-cell-red">381,415</td>
+                <td class="heat-cell-red">327,250</td>
+                <td class="heat-cell-red" style="font-weight:700;">585,096</td>
+                <td class="num-cell" style="color: #64748b;">-</td>
+                <td class="num-cell" style="color: #64748b;">-</td>
+                <td class="num-cell" style="color: #64748b;">-</td>
+                <td style="color: #34d399; font-weight: 600; background: rgba(16, 185, 129, 0.08); font-size: 12px;">ต้นปี (ช่วงติดตั้ง/ทดสอบ)</td>
+                <td style="color: #f87171; font-weight: 600; background: rgba(239, 68, 68, 0.08); font-size: 12px;">ก.ย. (585k - พีคใหม่)</td>
+            `;
+            tbody.appendChild(trM9);
+        }
+    }
+
+    // --- TAB 2: GROUPED BAR CHART & YOY ---
+    const groupedCanvas = document.getElementById('groupedBarChart');
+    if (groupedCanvas) {
+        const groupedDatasets = years.map(y => {
+            const yData = [];
+            for (let m = 1; m <= 12; m++) {
+                const found = rawData.find(d => d.Year === y && d.Month_Num === m);
+                yData.push(found ? found.Total : null);
+            }
+            return {
+                label: y.toString(),
+                data: yData,
+                backgroundColor: colors[y.toString()],
+                borderRadius: 4
+            };
+        });
+
+        
+
+        new Chart(groupedCanvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+                datasets: groupedDatasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top', labels: { color: '#e2e8f0', font: { family: 'Prompt' } } },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => ctx.dataset.label + ': ' + (ctx.parsed.y ? Number(ctx.parsed.y).toLocaleString() + ' หน่วย' : '-')
+                        }
+                    }
+                },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#94a3b8' } },
+                    y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#94a3b8', callback: val => (val/1000000).toFixed(1) + 'M' } }
+                }
+            }
+        });
+    }
+
+    const yoyCanvas = document.getElementById('yoyLineChart');
+    if (yoyCanvas) {
+        const yoyLineDatasets = years.map(y => {
+            const pts = [];
+            for (let m = 1; m <= 12; m++) {
+                const found = rawData.find(d => d.Year === y && d.Month_Num === m);
+                pts.push(found ? found.Total : null);
+            }
+            return {
+                label: y.toString(),
+                data: pts,
+                borderColor: colors[y.toString()],
+                backgroundColor: colors[y.toString()],
+                borderWidth: y === 2025 || y === 2026 ? 3.5 : 2,
+                tension: 0.25,
+                pointRadius: 3.5,
+                spanGaps: false
+            };
+        });
+
+        
+
+        new Chart(yoyCanvas.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+                datasets: yoyLineDatasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'top', labels: { color: '#e2e8f0', font: { family: 'Prompt' } } } },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#94a3b8' } },
+                    y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#94a3b8', callback: val => (val/1000000).toFixed(1) + 'M' } }
+                }
+            }
+        });
+    }
+
+    const annualCanvas = document.getElementById('annualTotalChart');
+    if (annualCanvas) {
+        const annualTotals = [
+            { year: '2021', val: 66730519 },
+            { year: '2022', val: 63914979 },
+            { year: '2023', val: 55737661 },
+            { year: '2024', val: 56709166 },
+            { year: '2025', val: 67712605 },
+            { year: '2026 (9M)', val: 43751036 }
+        ];
+
+        new Chart(annualCanvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: annualTotals.map(d => d.year),
+                datasets: [{
+                    data: annualTotals.map(d => d.val),
+                    backgroundColor: [colors['2021'], colors['2022'], colors['2023'], colors['2024'], colors['2025'], colors['2026']],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } },
+                    y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#94a3b8', callback: val => (val/1000000).toFixed(0) + 'M' } }
+                }
+            }
+        });
+    }
+
+    // --- TAB 3: SINGLE YEAR LOGIC ---
+    let singleYearChartInstance = null;
+    const yearCommentaries = {
+        2021: {
+            title: "วิเคราะห์ภาพรวมปี 2021: ยอดรวม 66,730,519 หน่วย (เฉลี่ย 5.56M/เดือน)",
+            text: "ปี 2021 การผลิตทรงตัวสูงตลอดทั้งปี จุดพีคสุดอยู่ในเดือน <b>ตุลาคม (6.61M)</b> และ <b>กันยายน (6.51M)</b> โดยเครื่องจักรหลักคือ <b>M3 (14.32M)</b> และ <b>M1 (13.33M)</b> ส่วนจุดต่ำสุดของปีเกิดขึ้นในเดือน <b>ธันวาคม (4.095M)</b> ซึ่งลดลงจากช่วงพีคถึง <b>-38%</b> แสดงให้เห็นชัดเจนว่าโรงงานเริ่มลดโหลดงานตั้งแต่ช่วงกลางเดือนธันวาคม"
+        },
+        2022: {
+            title: "วิเคราะห์ภาพรวมปี 2022: ยอดรวม 63,914,979 หน่วย (เฉลี่ย 5.33M/เดือน) - มีหลักฐาน Major Shutdown ในเดือน ธ.ค.!",
+            text: "ปี 2022 ผลิตเสถียรมากที่ระดับ 5.6M - 6.0M ตลอด 11 เดือนแรก และพีคในเดือน <b>พฤศจิกายน (6.40M)</b> แต่ในเดือน <b>ธันวาคม ยอดผลิตดรอปฮวบเหลือเพียง 1,972,263 หน่วย!</b> (ลดลงถึง -69% จากเดือนก่อนหน้า) โดยเครื่อง M5 ผลิตได้เพียง 26 หน่วย และ M1 เหลือเพียง 209k นี่คือ <b>หลักฐานสำคัญว่าโรงงานเคยทำ Major Turnaround Shutdown ครั้งใหญ่ในเดือนธันวาคม 2022</b> ได้สำเร็จโดยไม่กระทบผลประกอบการทั้งปี"
+        },
+        2023: {
+            title: "วิเคราะห์ภาพรวมปี 2023: ยอดรวม 55,737,661 หน่วย (เฉลี่ย 4.64M/เดือน)",
+            text: "ปี 2023 เป็นปีที่ความต้องการชะลอตัวลงเล็กน้อย โดยยอดผลิตพีคในเดือน <b>กรกฎาคม (6.02M)</b> และ <b>มีนาคม (5.61M)</b> ขณะที่จุดต่ำสุดกระจายอยู่ในช่วง <b>กุมภาพันธ์ (3.83M)</b>, <b>ตุลาคม (3.76M)</b> และ <b>ธันวาคม (4.03M)</b> เครื่อง M1 กลายมาเป็นผู้ผลิตอันดับ 1 แทนที่ M3"
+        },
+        2024: {
+            title: "วิเคราะห์ภาพรวมปี 2024: ยอดรวม 56,709,166 หน่วย (เฉลี่ย 4.73M/เดือน)",
+            text: "ปี 2024 เริ่มต้นชะลอตัวในเดือน ม.ค. (4.08M) และ ก.พ. (4.18M) แต่กลับมาระเบิดยอดผลิตสูงสุดในเดือน <b>พฤษภาคม (6.60M)</b> จากนั้นเข้าสู่ช่วงผลิตต่ำในเดือน <b>ตุลาคม (3.75M)</b> และกลับมาทรงตัวในเดือน ธ.ค. (4.71M)"
+        },
+        2025: {
+            title: "วิเคราะห์ภาพรวมปี 2025: ยอดรวม 67,712,605 หน่วย (สถิติสูงสุดเป็นประวัติการณ์! เฉลี่ย 5.64M/เดือน)",
+            text: "ปี 2025 โรงงานเดินเครื่องเต็มกำลังการผลิตสูงสุดเป็นประวัติการณ์ มีถึง 5 เดือนที่มียอดผลิตเกิน 6.2M หน่วย โดยเดือน <b>ตุลาคม (6.76M)</b> และ <b>สิงหาคม (6.73M)</b> พีคสูงสุด เครื่องจักร <b>M1 ทำสถิติผลิตสูงสุดถึง 15.39 ล้านหน่วย</b> ขณะที่จุดดรอปของปีเกิดขึ้นในเดือน <b>เมษายน (4.16M - สงกรานต์)</b> และ <b>ธันวาคม (4.45M)</b>"
+        },
+        2026: {
+            title: "วิเคราะห์ภาพรวมปี 2026 (9 เดือนแรก): ยอดรวม 43,751,036 หน่วย - การกำเนิดของ 'M9'",
+            text: "ปี 2026 มีจุดต่ำสุดในเดือน <b>กุมภาพันธ์ (3.58M)</b> และทำยอดพีคในเดือน <b>พฤษภาคม (6.70M)</b> จุดเปลี่ยนสำคัญที่สุดคือการติดตั้งเครื่องจักรใหม่ <b>M9</b> ซึ่งเริ่มทดสอบในเดือนมีนาคม และไต่ระดับก้าวกระโดดจนในเดือน <b>กันยายน ผลิตได้ถึง 585,096 หน่วย</b> กลายเป็นกำลังผลิตหลักอันดับ 3 ของโรงงานในเดือนนั้นทันที!"
+        }
+    };
+
+    function selectYearDeepDive(year, btn) {
+        if (btn) {
+            document.querySelectorAll('#tab-single-year .filter-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+        const badge = document.getElementById('selectedYearBadge');
+        if (badge) badge.textContent = `เจาะลึกข้อมูลปี ${year}`;
+
+        const yRows = rawData.filter(d => d.Year === year);
+        const totalYear = yRows.reduce((a, b) => a + (b.Total || 0), 0);
+        const avgMonth = totalYear / yRows.length;
+        
+        let peakRow = yRows[0], lowRow = yRows[0];
+        yRows.forEach(r => {
+            if (r.Total > peakRow.Total) peakRow = r;
+            if (r.Total < lowRow.Total) lowRow = r;
+        });
+
+        const kpiBox = document.getElementById('singleYearKpiContainer');
+        if (kpiBox) {
+            kpiBox.innerHTML = `
+                <div class="kpi-card blue">
+                    <div class="kpi-header"><span class="kpi-title">ยอดผลิตรวมปี ${year}</span></div>
+                    <div class="kpi-val">${(totalYear/1000000).toFixed(2)}M</div>
+                    <div class="kpi-sub">เฉลี่ย ${(avgMonth/1000000).toFixed(2)}M หน่วย/เดือน (${yRows.length} เดือน)</div>
+                </div>
+                <div class="kpi-card red">
+                    <div class="kpi-header"><span class="kpi-title">เดือนที่พีคสูงสุด (Peak Month)</span></div>
+                    <div class="kpi-val" style="color:#f87171;">${peakRow.Month}</div>
+                    <div class="kpi-sub">ผลิตได้ ${Number(peakRow.Total).toLocaleString()} หน่วย (ห้ามหยุดซ่อม)</div>
+                </div>
+                <div class="kpi-card green">
+                    <div class="kpi-header"><span class="kpi-title">เดือนที่ต่ำสุด (Valley / Low Month)</span></div>
+                    <div class="kpi-val" style="color:#34d399;">${lowRow.Month}</div>
+                    <div class="kpi-sub">ผลิตได้ ${Number(lowRow.Total).toLocaleString()} หน่วย (หน้าต่างซ่อมบำรุง)</div>
+                </div>
+                <div class="kpi-card purple">
+                    <div class="kpi-header"><span class="kpi-title">ผลต่าง Peak vs Valley</span></div>
+                    <div class="kpi-val" style="color:#c084fc;">${(((peakRow.Total - lowRow.Total)/peakRow.Total)*100).toFixed(1)}%</div>
+                    <div class="kpi-sub">ยอดผลิตต่างกัน ${Number(peakRow.Total - lowRow.Total).toLocaleString()} หน่วย</div>
+                </div>
+            `;
+        }
+
+        const comm = yearCommentaries[year];
+        if (comm) {
+            const tElem = document.getElementById('yearCommentTitle');
+            const txtElem = document.getElementById('yearCommentText');
+            if (tElem) tElem.textContent = comm.title;
+            if (txtElem) txtElem.innerHTML = comm.text;
+        }
+
+        const canvas = document.getElementById('singleYearStackedChart');
+        if (canvas) {
+            const activeMachines = machKeys.filter(k => yRows.some(r => r[k] && r[k] > 0));
+            const stackedDatasets = activeMachines.map(k => ({
+                label: k,
+                data: yRows.map(r => r[k] || 0),
+                backgroundColor: colors[k.toLowerCase()],
+                borderColor: '#0a0f1d',
+                borderWidth: 1.5,
+                borderRadius: 2
+            }));
+
+            
+
+            if (singleYearChartInstance) singleYearChartInstance.destroy();
+
+            singleYearChartInstance = new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+                    datasets: stackedDatasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: { top: 10, bottom: 15, left: 10, right: 15 }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: '#e2e8f0',
+                                font: { family: 'Prompt', size: 12, weight: '500' },
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                padding: 16
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            padding: 12,
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            titleFont: { family: 'Prompt', size: 13, weight: '700' },
+                            bodyFont: { family: 'Inter', size: 12 },
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(ctx) {
+                                    return ctx.dataset.label + ': ' + Number(ctx.parsed.y).toLocaleString() + ' หน่วย';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            grid: { display: false },
+                            ticks: {
+                                color: '#cbd5e1',
+                                font: { family: 'Prompt', size: 12, weight: '600' },
+                                padding: 8
+                            }
+                        },
+                        y: {
+                            stacked: true,
+                            grid: { color: 'rgba(255, 255, 255, 0.04)' },
+                            ticks: {
+                                color: '#94a3b8',
+                                font: { size: 11 },
+                                padding: 8,
+                                callback: function(val) {
+                                    return (val/1000000).toFixed(1) + 'M';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    // --- TAB 4: MACHINE HISTORICAL TRACKER LOGIC ---
+    let machineChartInstance = null;
+    const machineProfiles = {
+        M1: {
+            title: "M1: เสาหลักเบอร์ 1 ของโรงงาน (21.39% Share)",
+            total: "75,851,779 หน่วย",
+            avg: "1,085,620 หน่วย/เดือน",
+            lowMonths: "ส.ค. (889k), ธ.ค. (900k), ก.พ. (897k)",
+            peakMonths: "พ.ย. (1.37M), มี.ค. (1.23M)",
+            recommendation: "<b>แนะนำซ่อมบำรุงใหญ่ในเดือน ธันวาคม (ช่วงปลายปี) หรือ กุมภาพันธ์</b><br><span style='color:#ef4444;'>กฎเหล็ก:</span> ห้ามหยุดซ่อมพร้อม M3 เด็ดขาด ให้ใช้ M9 รองรับกำลังการผลิตแทน"
+        },
+        M3: {
+            title: "M3: เสาหลักเบอร์ 2 ของโรงงาน (21.00% Share)",
+            total: "74,444,938 หน่วย",
+            avg: "1,089,306 หน่วย/เดือน",
+            lowMonths: "ก.พ. (849k - ต่ำสุดชัดเจน), ธ.ค. (898k)",
+            peakMonths: "พ.ค. (1.37M), ม.ค. (1.26M)",
+            recommendation: "<b>แนะนำซ่อมบำรุงใหญ่ในเดือน กุมภาพันธ์ (Window A-)</b> เนื่องจาก M3 มีสถิติต่ำสุดในเดือน ก.พ. ทุกปี หรือสลับทำปลาย ธ.ค. คนละช่วงกับ M1"
+        },
+        M4: {
+            title: "M4: เครื่องจักรกำลังการผลิตสูง (15.59% Share)",
+            total: "55,265,466 หน่วย",
+            avg: "815,651 หน่วย/เดือน",
+            lowMonths: "ธ.ค. (515k - ดรอปฮวบ), มิ.ย. (760k)",
+            peakMonths: "มี.ค. (1.16M), ก.ค. (1.03M)",
+            recommendation: "<b>แนะนำซ่อมบำรุงใหญ่ในเดือน ธันวาคม (สัปดาห์สุดท้าย)</b> ยอดผลิตของ M4 ในเดือน ธ.ค. จะลดลงเหลือเพียง 5.1 แสนหน่วย เหมาะกับการ Overhaul มากที่สุด"
+        },
+        M5: {
+            title: "M5: เครื่องจักรที่มีความเสี่ยง Breakdown สูง (9.59% Share)",
+            total: "34,002,233 หน่วย",
+            avg: "521,622 หน่วย/เดือน",
+            lowMonths: "ธ.ค. (240k), ก.พ. (440k)",
+            peakMonths: "ส.ค. (705k), มี.ค. (603k)",
+            recommendation: "<b>แนะนำซ่อมบำรุงใหญ่ในเดือน ธันวาคม</b> และต้องเน้น Predictive Maintenance เชิงลึก เพราะเคยมีประวัติหยุดฉุกเฉินจนผลผลิตเหลือ 26 หน่วยในปี 2022"
+        },
+        M6: {
+            title: "M6: เครื่องจักรกำลังการผลิตสูงอันดับ 3 (16.16% Share)",
+            total: "57,308,716 หน่วย",
+            avg: "818,580 หน่วย/เดือน",
+            lowMonths: "ธ.ค. (613k), เม.ย. (639k)",
+            peakMonths: "พ.ค. (984k), ก.ย. (885k)",
+            recommendation: "<b>แนะนำซ่อมบำรุงใหญ่ในเดือน เมษายน (ช่วงสงกรานต์) หรือ ธันวาคม</b> สามารถใช้ช่วงวันหยุดสงกรานต์ทำ PM 5-7 วันได้โดยไม่กระทบยอดส่งมอบ"
+        },
+        M7: {
+            title: "M7: เครื่องจักรสายสนับสนุน (7.08% Share)",
+            total: "25,097,842 หน่วย",
+            avg: "365,137 หน่วย/เดือน",
+            lowMonths: "พ.ย. (274k), ธ.ค. (284k)",
+            peakMonths: "เม.ย. (446k), มี.ค. (427k)",
+            recommendation: "<b>แนะนำซ่อมบำรุงใหญ่ในเดือน พฤศจิกายน – ธันวาคม</b> เป็นเครื่องที่มียอดผลิตน้อยสุด สามารถวางแผนหยุดซ่อมได้อย่างยืดหยุ่น"
+        },
+        M8: {
+            title: "M8: เครื่องจักรขนาดกลาง (8.78% Share)",
+            total: "31,131,172 หน่วย",
+            avg: "484,166 หน่วย/เดือน",
+            lowMonths: "มี.ค. (331k), ธ.ค. (400k)",
+            peakMonths: "ส.ค. (642k), พ.ค. (579k)",
+            recommendation: "<b>แนะนำซ่อมบำรุงใหญ่ในเดือน ธันวาคม หรือ มกราคม</b>"
+        },
+        M9: {
+            title: "M9: เครื่องจักรใหม่เชิงกลยุทธ์ (ติดตั้งปี 2026 - Ramping Up)",
+            total: "1,453,820 หน่วย (สะสม 9 เดือนแรก)",
+            avg: "161,535 หน่วย/เดือน (เฉลี่ย) / 585,096 หน่วย (ล่าสุด ก.ย.)",
+            lowMonths: "ม.ค.-ก.พ. (ติดตั้ง 0 หน่วย)",
+            peakMonths: "ก.ย. 2026 (585k หน่วย)",
+            recommendation: "<b>บทบาทเชิงกลยุทธ์:</b> ใช้เป็น Swing Capacity รับโหลดงานแทนเครื่องอื่นที่เข้าซ่อมบำรุง และวางแผน 1st Major Inspection ในช่วง Q1 2027 หลังเดินเครื่องครบ 1,000 ชั่วโมง"
+        }
+    };
+
+    function selectMachineTrack(machine, btn) {
+        if (btn) {
+            document.querySelectorAll('#tab-machine-hist .filter-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+        const badge = document.getElementById('selectedMachineBadge');
+        if (badge) badge.textContent = `เครื่องจักร ${machine}`;
+
+        // Individual years lines (thin lines)
+        const machDatasets = years.map(y => {
+            const pts = [];
+            for (let m = 1; m <= 12; m++) {
+                const found = rawData.find(d => d.Year === y && d.Month_Num === m);
+                pts.push(found ? (found[machine] !== undefined ? found[machine] : null) : null);
+            }
+            return {
+                label: `ปี ${y}`,
+                data: pts,
+                borderColor: colors[y.toString()] || '#94a3b8',
+                backgroundColor: colors[y.toString()] || '#94a3b8',
+                borderWidth: y === 2025 || y === 2026 ? 2.5 : 1.5,
+                tension: 0.25,
+                pointRadius: 3
+            };
+        });
+
+        // ★ CRITICAL: Add 5-Year Historical Average Line as a prominent BOLD line!
+        if (machAvgData[machine]) {
+            machDatasets.unshift({
+                label: `★ ค่าเฉลี่ยย้อนหลัง 5 ปี (5-Yr Historical Average)`,
+                data: machAvgData[machine],
+                borderColor: '#ffffff',
+                backgroundColor: '#ffffff',
+                borderWidth: 4,
+                tension: 0.25,
+                pointRadius: 6,
+                pointHoverRadius: 9,
+                pointStyle: 'circle',
+                borderDash: [8, 4],
+                order: -99
+            });
+        }
+
+        
+
+        const canvas = document.getElementById('machineHistoryChart');
+        if (canvas) {
+            if (machineChartInstance) machineChartInstance.destroy();
+
+            machineChartInstance = new Chart(canvas.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
+                    datasets: machDatasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top', labels: { color: '#e2e8f0', font: { family: 'Prompt' } } } },
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#94a3b8' } },
+                        y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#94a3b8', callback: val => (val/1000).toFixed(0) + 'k' } }
+                    }
+                }
+            });
+        }
+
+        const p = machineProfiles[machine];
+        if (p) {
+            const sBox = document.getElementById('machineStatsBox');
+            const aBox = document.getElementById('machineAdviceBox');
+            if (sBox) {
+                sBox.innerHTML = `
+                    <p><b>ชื่อเครื่องจักร:</b> ${p.title}</p>
+                    <p><b>ยอดผลิตสะสม 6 ปี:</b> ${p.total}</p>
+                    <p><b>ยอดผลิตเฉลี่ยต่อเดือน:</b> ${p.avg}</p>
+                    <p><b>เดือนที่ยอดผลิตต่ำ (Valley):</b> <span style="color:#34d399;">${p.lowMonths}</span></p>
+                    <p><b>เดือนที่ยอดผลิตพีค (Peak):</b> <span style="color:#f87171;">${p.peakMonths}</span></p>
+                `;
+            }
+            if (aBox) aBox.innerHTML = p.recommendation;
+        }
+    }
+
+    // --- TAB 6: MASTER DATA TABLE POPULATE ---
+    function populateMasterTable(dataToDisplay) {
+        const tbody = document.getElementById('masterTableBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        dataToDisplay.forEach(row => {
+            const tr = document.createElement('tr');
+            let statusBadge = '<span class="badge badge-blue">ปกติ</span>';
+            if (row.Month_Num === 12) statusBadge = '<span class="badge badge-green">Window A+ (ต่ำสุด)</span>';
+            else if (row.Month_Num === 2) statusBadge = '<span class="badge badge-amber">Window A- (ต่ำ 2)</span>';
+            else if (row.Month_Num === 4) statusBadge = '<span class="badge badge-amber">Window B+ (สงกรานต์)</span>';
+            else if (row.Month_Num === 5) statusBadge = '<span class="badge badge-red">Peak (สูงสุด)</span>';
+
+            const fmt = v => (v !== null && v !== undefined && v !== '') ? Number(v).toLocaleString() : '-';
+
+            tr.innerHTML = `
+                <td><b>${row.Year}</b></td>
+                <td><b>${row.Month}</b></td>
+                <td class="num-cell">${fmt(row.M1)}</td>
+                <td class="num-cell">${fmt(row.M3)}</td>
+                <td class="num-cell">${fmt(row.M4)}</td>
+                <td class="num-cell">${fmt(row.M5)}</td>
+                <td class="num-cell">${fmt(row.M6)}</td>
+                <td class="num-cell">${fmt(row.M7)}</td>
+                <td class="num-cell">${fmt(row.M8)}</td>
+                <td class="num-cell">${fmt(row.M9)}</td>
+                <td class="num-cell" style="font-weight:700; color:#38bdf8;">${fmt(row.Total)}</td>
+                <td>${statusBadge}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        const badge = document.getElementById('rowCountBadge');
+        if (badge) badge.textContent = `แสดง ${dataToDisplay.length} รายการ`;
+    }
+
+    let currentFilterYear = 'ALL';
+    function filterTableYear(year, btn) {
+        currentFilterYear = year;
+        document.querySelectorAll('#tab-data .filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        applyFilters();
+    }
+
+    function searchTable() { applyFilters(); }
+
+    function applyFilters() {
+        const sInput = document.getElementById('searchInput');
+        const term = sInput ? sInput.value.toLowerCase() : '';
+        let filtered = rawData;
+        if (currentFilterYear !== 'ALL') {
+            filtered = filtered.filter(d => d.Year.toString() === currentFilterYear);
+        }
+        if (term) {
+            filtered = filtered.filter(d => 
+                d.Year.toString().includes(term) ||
+                d.Month.toLowerCase().includes(term) ||
+                (d.Total && d.Total.toString().includes(term))
+            );
+        }
+        populateMasterTable(filtered);
+    }
+
+    function exportToCSV() {
+        let csv = 'Year,Month,M1,M3,M4,M5,M6,M7,M8,M9,Total_Input\n';
+        rawData.forEach(row => {
+            csv += `${row.Year},${row.Month},${row.M1||''},${row.M3||''},${row.M4||''},${row.M5||''},${row.M6||''},${row.M7||''},${row.M8||''},${row.M9||''},${row.Total||''}\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute('download', 'Production_Input_2021-2026.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // Initialize View safely
+    populateMachineScheduleTable();
+    renderMiniCharts();
+    renderMainAvgChart();
+    populateMasterTable(rawData);
+    selectYearDeepDive(2021);
+    selectMachineTrack('M1');
+</script>
+
+</body>
+</html>
